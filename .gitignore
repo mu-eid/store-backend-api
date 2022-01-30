@@ -1,0 +1,6 @@
+# Node libs
+node_modules/
+
+# Artifacts
+dist/
+coverage/
