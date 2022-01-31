@@ -4,7 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "fmt": "npx prettier --write src/"
+        "fmt": "npx prettier --write src/",
+        "build": "npx tsc",
+        "start": "npm run build && node dist/index.js"
     },
     "repository": {
         "type": "git",
