@@ -1,0 +1,7 @@
+# Node libs
+node_modules/
+package-lock.json
+
+# Artifacts
+dist/
+coverage/

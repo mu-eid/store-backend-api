@@ -3,7 +3,9 @@
     "version": "0.1.0",
     "description": "",
     "main": "index.js",
-    "scripts": {},
+    "scripts": {
+        "fmt": "npx prettier --write src/"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/mu-eid/store-backend-api.git"
