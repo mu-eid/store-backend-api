@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 import * as pg from 'pg';
 
-import { ENV_PATH } from './utils';
+import { ENV_PATH } from './utils/path';
 
 // SIDE EFFECT: Loading env variables into process.env
 dotenv.config({ path: ENV_PATH });
