@@ -19,4 +19,12 @@ function initDevDB() {
     migrator.reset().then(() => migrator.up());
 }
 
-export { initDevDB };
+function initTestDB() {
+    const migrator = db_migrate.getInstance(true, {
+        config: configPath,
+        env: 'test',
+    });
+    migrator.reset().then(() => migrator.up());
+}
+
+export { initDevDB, initTestDB };
