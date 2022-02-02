@@ -11,10 +11,12 @@ const configPath = path.resolve(
     'database.json'
 );
 
-const migrator = db_migrate.getInstance(true, { config: configPath });
-
-function init_db() {
+function initDevDB() {
+    const migrator = db_migrate.getInstance(true, {
+        config: configPath,
+        env: 'dev',
+    });
     migrator.reset().then(() => migrator.up());
 }
 
-export { init_db };
+export { initDevDB };

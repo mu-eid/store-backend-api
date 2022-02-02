@@ -3,12 +3,12 @@ import * as dotenv from 'dotenv';
 import * as bcrypt from 'bcrypt';
 import { ENV_PATH } from './utils/path';
 import dbClient from './database';
-import { init_db } from './utils/db_migrator';
+import { initDevDB } from './utils/db_migrator';
 
 const ENV_VARS = dotenv.config({ path: ENV_PATH });
 const { APP_HOST, APP_PORT, NODE_ENV } = process.env;
 
-init_db();
+initDevDB();
 
 const app = express();
 
