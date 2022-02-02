@@ -3,14 +3,12 @@ import * as dotenv from 'dotenv';
 import * as bcrypt from 'bcrypt';
 import { ENV_PATH } from './utils/path';
 import dbClient from './database';
-import { initDevDB, initTestDB } from './utils/db_migrator';
-
+import { initDevDB } from './utils/db_migrator';
 
 const ENV_VARS = dotenv.config({ path: ENV_PATH });
 const { APP_HOST, APP_PORT } = process.env;
 
 initDevDB();
-initTestDB();
 
 const app = express();
 
@@ -52,12 +50,8 @@ app.get('/hash', async (req: Request, resp: Response): Promise<void> => {
     }
 });
 
-app.listen(APP_PORT, (): void => {
+app.listen(APP_PORT, async (): Promise<void> => {
     console.log(`Server is listening at http://${APP_HOST}:${APP_PORT}`);
-
     if (ENV_VARS.error) console.log(ENV_VARS.error);
-    else if (NODE_ENV === 'dev') {
-        console.log(ENV_VARS.parsed);
-        //console.log(process.env);
-    }
+    console.log(ENV_VARS.parsed);
 });
