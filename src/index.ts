@@ -29,9 +29,33 @@ app.get('/hallo', async (req: Request, resp: Response): Promise<void> => {
     }
 });
 
+app.get('/hash', async (req: Request, resp: Response): Promise<void> => {
+    try {
+        const password = req.query.pass as string;
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+
+        resp.json({
+            password: password,
+            hash: hash,
+            hash_length: hash.length,
+        });
+    } catch (err) {
+        resp.status(500).json({
+            error: {
+                When: 'While requesting GET /hash',
+                Reason: (err as Error).message,
+            },
+        });
+    }
+});
+
 app.listen(APP_PORT, (): void => {
     console.log(`Server is listening at http://${APP_HOST}:${APP_PORT}`);
 
     if (ENV_VARS.error) console.log(ENV_VARS.error);
-    else if (NODE_ENV === 'dev') console.log(ENV_VARS.parsed);
+    else if (NODE_ENV === 'dev') {
+        console.log(ENV_VARS.parsed);
+        //console.log(process.env);
+    }
 });
