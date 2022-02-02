@@ -11,20 +11,34 @@ const configPath = path.resolve(
     'database.json'
 );
 
+const dev_migrator = db_migrate.getInstance(true, {
+    config: configPath,
+    env: 'dev',
+});
+
+const test_migrator = db_migrate.getInstance(true, {
+    config: configPath,
+    env: 'test',
+});
+
 function initDevDB() {
-    const migrator = db_migrate.getInstance(true, {
-        config: configPath,
-        env: 'dev',
-    });
-    migrator.reset().then(() => migrator.up());
+    console.info('------------ Init Dev Database -------------');
+    return dev_migrator.reset().then(() => dev_migrator.up());
+}
+
+function resetDevDB() {
+    console.info('------------ Reset Dev Database -------------');
+    return dev_migrator.reset();
 }
 
 function initTestDB() {
-    const migrator = db_migrate.getInstance(true, {
-        config: configPath,
-        env: 'test',
-    });
-    migrator.reset().then(() => migrator.up());
+    console.info('----------- Init Test Database -------------');
+    return test_migrator.reset().then(() => test_migrator.up());
+}
+
+function resetTestDB() {
+    console.info('----------- Reset Test Database -------------');
+    return test_migrator.reset();
 }
 
 export { initDevDB, initTestDB };
