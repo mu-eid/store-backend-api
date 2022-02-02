@@ -6,7 +6,8 @@
     "scripts": {
         "fmt": "npx prettier --write src/",
         "build": "npx tsc",
-        "start": "npm run build && node dist/index.js"
+        "start": "NODE_ENV=dev npm run build && node dist/index.js",
+        "test": "NODE_ENV=test npm run build && npx jasmine"
     },
     "repository": {
         "type": "git",
