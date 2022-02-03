@@ -21,6 +21,9 @@ const test_migrator = db_migrate.getInstance(true, {
     env: 'test',
 });
 
+dev_migrator.silence(true);
+test_migrator.silence(true);
+
 function initDevDB() {
     console.info('------------ Init Dev Database -------------');
     return dev_migrator.reset().then(() => dev_migrator.up());
