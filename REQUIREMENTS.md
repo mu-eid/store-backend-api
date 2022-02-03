@@ -6,49 +6,71 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 
-#### Products
+### Products
 
 -   Index
 -   Show
 -   Create [token required]
+-   Delete [token required]
 -   [OPTIONAL] Top 5 most popular products
 -   [OPTIONAL] Products by category (args: product category)
 
-#### Users
+### Users
 
 -   Index [token required]
 -   Show [token required]
--   Create N[token required]
+-   Create [token required]
+-   Delete [token required]
 
-#### Orders
+### Orders
+
+-   Index [token required]
+-   Show [token required]
+-   Create [token required]
+-   Delete [token required]
 
 -   Current Order by user (args: user id)[token required]
 -   [OPTIONAL] Completed Orders by user (args: user id)[token required]
 
-## Data Shapes
+### Order_Items
+
+-   Index
+-   IndexByOrderID
+-   IndexByProductID
+
+## DATABASE SCHEMA
 
 ### Products
 
--   _id_ (PK)
--   _name_
--   _price_
+| Name  |  Type | Constraint  |
+|:---:|:---:|:---:|
+|  id |  INTEGER |  PK |  
+|  name | VARCHAR(64)  |  - |
+|  price | NUMERIC(6, 2)  | -  |
 
 ### Users
 
--   _id_ (PK)
--   _first_name_
--   _last_name_
--   _password_  (Bcrypt hash digest)
+| Name  |  Type | Constraint  |
+|:---:|:---:|:---:|
+|  id |  INTEGER |  PK |  
+|  first_name | VARCHAR(32)  |  - |
+|  last_name | VARCHAR(32)  |  - |
+|  password | CHAR(60)  | -  |
 
 ### Orders
 
--   _id_ (PK)
--   _user_id_ (FK)
--   _complete_ 
+| Name  |  Type | Constraint  |
+|:---:|:---:|:---:|
+|  id |  INTEGER |  PK |  
+|  user_id | INTEGER |  FK |
+|  compelete | BOOLEAN | -  |
 
 ### Order_Items
 
--   _order_id_ (FK)
--   _product_id_ (FK)
--   _quantity_ 
--   __NOTE__: tuple _(order_id, product_id)_ is the **Primary Key** in this relation.
+| Name  |  Type | Constraint  |
+|:---:|:---:|:---:|
+|  order_id |  INTEGER |  FK, PK |  
+|  product_id | INTEGER |  FK, PK |
+|  quantity | INTEGER | min_max_quantity |
+
+**NOTE**: tuple _(order_id, product_id)_ is the **Primary Key** in this relation.
