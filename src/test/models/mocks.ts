@@ -6,7 +6,7 @@ import { Item } from '../../models/order_item';
 const userMock: User = {
     first_name: 'Martin',
     last_name: 'Odersky',
-    password: '$2b$10$A8MGAjVIQJYfqpbIdPd4D.UwQdk6UzOjj7kTHjC/dilCFK8eeCk/i',
+    password: '$calaR0ck$',
 };
 
 const productMock: Product = {
