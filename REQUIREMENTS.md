@@ -8,69 +8,69 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ### Products
 
--   Index
--   Show
--   Create [token required]
--   Delete [token required]
--   [OPTIONAL] Top 5 most popular products
--   [OPTIONAL] Products by category (args: product category)
+- Index
+- Show
+- Create [token required]
+- Delete [token required]
+- [OPTIONAL] Top 5 most popular products
+- [OPTIONAL] Products by category (args: product category)
 
 ### Users
 
--   Index [token required]
--   Show [token required]
--   Create [token required]
--   Delete [token required]
+- Index [token required]
+- Show [token required]
+- Create [token required]
+- Delete [token required]
 
 ### Orders
 
--   Index [token required]
--   Show [token required]
--   Create [token required]
--   Delete [token required]
+- Index [token required]
+- Show [token required]
+- Create [token required]
+- Delete [token required]
 
--   Current Order by user (args: user id)[token required]
--   [OPTIONAL] Completed Orders by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required]
+- [OPTIONAL] Completed Orders by user (args: user id)[token required]
 
 ### Order_Items
 
--   Index
--   IndexByOrderID
--   IndexByProductID
+- Index
+- IndexByOrderID
+- IndexByProductID
 
 ## DATABASE SCHEMA
 
 ### Products
 
-| Name  |  Type | Constraint  |
-|:---:|:---:|:---:|
-|  id |  INTEGER |  PK |  
-|  name | VARCHAR(64)  |  - |
-|  price | NUMERIC(6, 2)  | -  |
+| Name  |     Type      | Constraint |
+| :---: | :-----------: | :--------: |
+|  id   |    INTEGER    |     PK     |
+| name  |  VARCHAR(64)  |     -      |
+| price | NUMERIC(6, 2) |     -      |
 
 ### Users
 
-| Name  |  Type | Constraint  |
-|:---:|:---:|:---:|
-|  id |  INTEGER |  PK |  
-|  first_name | VARCHAR(32)  |  - |
-|  last_name | VARCHAR(32)  |  - |
-|  password | CHAR(60)  | -  |
+|    Name    |    Type     | Constraint |
+| :--------: | :---------: | :--------: |
+|     id     |   INTEGER   |     PK     |
+| first_name | VARCHAR(32) |     -      |
+| last_name  | VARCHAR(32) |     -      |
+|  password  |  CHAR(60)   |     -      |
 
 ### Orders
 
-| Name  |  Type | Constraint  |
-|:---:|:---:|:---:|
-|  id |  INTEGER |  PK |  
-|  user_id | INTEGER |  FK |
-|  compelete | BOOLEAN | -  |
+|   Name    |  Type   | Constraint |
+| :-------: | :-----: | :--------: |
+|    id     | INTEGER |     PK     |
+|  user_id  | INTEGER |     FK     |
+| compelete | BOOLEAN |     -      |
 
 ### Order_Items
 
-| Name  |  Type | Constraint  |
-|:---:|:---:|:---:|
-|  order_id |  INTEGER |  FK, PK |  
-|  product_id | INTEGER |  FK, PK |
-|  quantity | INTEGER | min_max_quantity |
+|    Name    |  Type   |    Constraint    |
+| :--------: | :-----: | :--------------: |
+|  order_id  | INTEGER |      FK, PK      |
+| product_id | INTEGER |      FK, PK      |
+|  quantity  | INTEGER | min_max_quantity |
 
 **NOTE**: tuple _(order_id, product_id)_ is the **Primary Key** in this relation.

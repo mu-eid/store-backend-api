@@ -1,17 +1,17 @@
 {
-    "sql_file": true,
-    "dev": {
-        "driver": "pg",
-        "user": {"ENV": "PG_USER"},
-        "password": {"ENV": "PG_PASS"},
-        "host": {"ENV": "PG_HOST"},
-        "database": {"ENV": "DB_DEV"}
-    },
-    "test": {
-        "driver": "pg",
-        "user": {"ENV": "PG_USER"},
-        "password": {"ENV": "PG_PASS"},
-        "host": {"ENV": "PG_HOST"},
-        "database": {"ENV": "DB_TEST"}
-    }
+  "sql_file": true,
+  "dev": {
+    "driver": "pg",
+    "user": { "ENV": "PG_USER" },
+    "password": { "ENV": "PG_PASS" },
+    "host": { "ENV": "PG_HOST" },
+    "database": { "ENV": "DB_DEV" }
+  },
+  "test": {
+    "driver": "pg",
+    "user": { "ENV": "PG_USER" },
+    "password": { "ENV": "PG_PASS" },
+    "host": { "ENV": "PG_HOST" },
+    "database": { "ENV": "DB_TEST" }
+  }
 }
