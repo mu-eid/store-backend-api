@@ -2,6 +2,8 @@ import { Application, Request, Response } from 'express';
 
 import dbClient from '../database';
 import { UserStore } from '../models/user';
+import { checkID } from './middleware/id-checker';
+import { checkUserPayload } from './middleware/user';
 
 const model = new UserStore(dbClient);
 
@@ -23,23 +25,13 @@ const show = async (req: Request, resp: Response): Promise<void> => {
   try {
     const param = req.params['id'];
     const id = parseInt(param, 10);
+    const result = await model.show(id);
 
-    if (id) {
-      const result = await model.show(id);
-
-      result
-        ? resp.json(result)
-        : resp
-            .status(404)
-            .json({ message: `No such user with ID: ${id} found in database` });
-    } else {
-      resp.status(400).json({
-        error: {
-          reason: `User ID needs to be a positive integer greater than 0`,
-          recieved: `${param}`,
-        },
-      });
-    }
+    result
+      ? resp.json(result)
+      : resp
+          .status(404)
+          .json({ message: `No such user with ID: ${id} found in database` });
   } catch (err) {
     resp.status(500).json({
       error: {
@@ -52,34 +44,6 @@ const show = async (req: Request, resp: Response): Promise<void> => {
 
 const create = async (req: Request, resp: Response): Promise<void> => {
   const { first_name, last_name, password } = req.body;
-
-  let reason: string = '';
-
-  if (!first_name) {
-    reason = 'First name was not provided.';
-  }
-
-  if (!last_name) {
-    reason = 'Last name was not provided.';
-  }
-
-  if (!password) {
-    reason = 'Password was not provided.';
-  }
-
-  if (reason) {
-    resp.status(422).json({
-      error: {
-        reason: reason,
-        recieved: {
-          first_name: first_name,
-          last_name: last_name,
-          password: password,
-        },
-      },
-    });
-    return;
-  }
 
   try {
     const user = await model.create({
@@ -103,21 +67,11 @@ const destroy = async (req: Request, resp: Response): Promise<void> => {
   try {
     const param = req.params['id'];
     const id = parseInt(param, 10);
+    const result = await model.delete(id);
 
-    if (id) {
-      const result = await model.delete(id);
-
-      result
-        ? resp.json(result)
-        : resp.status(404).json({ message: 'No such user in database' });
-    } else {
-      resp.status(400).json({
-        error: {
-          reason: `User ID needs to be a positive integer greater than 0`,
-          recieved: `${param}`,
-        },
-      });
-    }
+    result
+      ? resp.json(result)
+      : resp.status(404).json({ message: 'No such user in database' });
   } catch (err) {
     resp.status(500).json({
       error: {
@@ -130,9 +84,9 @@ const destroy = async (req: Request, resp: Response): Promise<void> => {
 
 function userRoutes(app: Application): void {
   app.get('/users', index);
-  app.get('/users/:id', show);
-  app.post('/users', create);
-  app.delete('/users/:id', destroy);
+  app.get('/users/:id', checkID, show);
+  app.post('/users', checkUserPayload, create);
+  app.delete('/users/:id', checkID, destroy);
 }
 
 export default userRoutes;

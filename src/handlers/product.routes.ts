@@ -1,6 +1,7 @@
 import { Application, Request, Response } from 'express';
 
-import { checkProductID, checkProductPayload } from './middleware/product';
+import { checkProductPayload } from './middleware/product';
+import { checkID } from './middleware/id-checker';
 import dbClient from '../database';
 import { ProductStore } from '../models/product';
 
@@ -92,9 +93,9 @@ const destroy = async (req: Request, resp: Response): Promise<void> => {
 
 function productRoutes(app: Application): void {
   app.get('/products', index);
-  app.get('/products/:id', checkProductID, show);
+  app.get('/products/:id', checkID, show);
   app.post('/products', checkProductPayload, create);
-  app.delete('/products/:id', checkProductID, destroy);
+  app.delete('/products/:id', checkID, destroy);
 }
 
 export default productRoutes;
