@@ -8,19 +8,21 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ### Products
 
-- Index
-- Show
-- Create [token required]
-- Delete [token required]
-- [OPTIONAL] Top 5 most popular products
-- [OPTIONAL] Products by category (args: product category)
+| Action  | HTTP   | URI           |  Token   |
+| :------ | :----- | :------------ | :------: |
+| Index   | GET    | /products     |    -     |
+| Show    | GET    | /products/:id |    -     |
+| Create  | POST   | /products     | Required |
+| Destroy | DELETE | /products/:id | Required |
 
 ### Users
 
-- Index [token required]
-- Show [token required]
-- Create [token required]
-- Delete [token required]
+| Action  | HTTP   | URI        |  Token   |
+| :------ | :----- | :--------- | :------: |
+| Index   | GET    | /users     | Required |
+| Show    | GET    | /users/:id | Required |
+| Create  | POST   | /users     | Required |
+| Destroy | DELETE | /users/:id | Required |
 
 ### Orders
 

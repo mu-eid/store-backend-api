@@ -5,6 +5,7 @@ import { ENV_PATH } from './utils/path';
 import dbClient from './database';
 import { initDevDB } from './utils/db_migrator';
 import userRoutes from './handlers/user.routes';
+import productRoutes from './handlers/product.routes';
 
 const ENV_VARS = dotenv.config({ path: ENV_PATH });
 const { APP_HOST, APP_PORT } = process.env;
@@ -19,6 +20,7 @@ export const app = express();
 // Use JSON body parser and attach API endpoints
 app.use(express.json());
 userRoutes(app);
+productRoutes(app);
 
 app.get('/hallo', async (req: Request, resp: Response): Promise<void> => {
   try {
