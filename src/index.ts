@@ -7,6 +7,7 @@ import { initDevDB } from './utils/db_migrator';
 import userRoutes from './handlers/user.routes';
 import productRoutes from './handlers/product.routes';
 import { orderRoutes } from './handlers/order.routes';
+import { itemRoutes } from './handlers/order_item.routes';
 
 const ENV_VARS = dotenv.config({ path: ENV_PATH });
 const { APP_HOST, APP_PORT } = process.env;
@@ -23,6 +24,7 @@ app.use(express.json());
 userRoutes(app);
 productRoutes(app);
 orderRoutes(app);
+itemRoutes(app);
 
 app.get('/hallo', async (req: Request, resp: Response): Promise<void> => {
   try {

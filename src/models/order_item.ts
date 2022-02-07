@@ -34,6 +34,11 @@ class ItemStore extends DataModel<Item> {
     }
   }
 
+  /**
+   * Fetch a list of order items representing that product.
+   * @param id product id needed to be indexed
+   * @returns list of order items.
+   */
   async indexByProduct(id: number): Promise<Item[]> {
     try {
       const result = await this.executeQuery(
@@ -61,12 +66,12 @@ class ItemStore extends DataModel<Item> {
     }
   }
 
-  async deleteByOrder(id: number): Promise<number> {
+  async deleteByOrder(id: number): Promise<Item[]> {
     try {
       const result = await this.executeQuery(
         `DELETE FROM order_items WHERE order_id = ${id} RETURNING *`
       );
-      return result.rowCount;
+      return result.rows;
     } catch (err) {
       const error = err as Error;
       throw new Error(
