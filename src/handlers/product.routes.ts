@@ -25,24 +25,14 @@ const show = async (req: Request, resp: Response): Promise<void> => {
   try {
     const param = req.params['id'];
     const id = parseInt(param, 10);
+    const result = await model.show(id);
 
-    if (id) {
-      const result = await model.show(id);
-
-      result
-        ? resp.json(result)
-        : resp.status(404).json({
-            error: 'No such product',
-            reason: `Product with ID: ${id} does not exist in database`,
-          });
-    } else {
-      resp.status(400).json({
-        error: {
-          reason: `Product ID needs to be a positive integer greater than 0`,
-          recieved: `${param}`,
-        },
-      });
-    }
+    result
+      ? resp.json(result)
+      : resp.status(404).json({
+          error: 'No such product',
+          reason: `Product with ID: ${id} does not exist in database`,
+        });
   } catch (err) {
     resp.status(500).json({
       error: {
