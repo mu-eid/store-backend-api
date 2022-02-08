@@ -1,4 +1,5 @@
 import * as pg from 'pg';
+import { Table } from '../database';
 import DataModel from './model';
 
 type Item = {
@@ -9,17 +10,7 @@ type Item = {
 
 class ItemStore extends DataModel<Item> {
   constructor(dbPool: pg.Pool) {
-    super(dbPool);
-  }
-
-  async index(): Promise<Item[]> {
-    try {
-      const result = await this.executeQuery(`SELECT * FROM order_items;`);
-      return result.rows;
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Fetching Entire Ordered Items List -- ${error.message}`);
-    }
+    super(dbPool, Table.ORDER_ITEMS);
   }
 
   async indexByOrder(id: number): Promise<Item[]> {

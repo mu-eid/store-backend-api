@@ -1,6 +1,7 @@
 import * as pg from 'pg';
 import * as bcrypt from 'bcrypt';
 import DataModel from './model';
+import { Table } from '../database';
 
 type User = {
   id?: number;
@@ -11,29 +12,7 @@ type User = {
 
 class UserStore extends DataModel<User> {
   constructor(db: pg.Pool) {
-    super(db);
-  }
-
-  async index(): Promise<User[]> {
-    try {
-      const result = await this.executeQuery(`SELECT * FROM users;`);
-      return result.rows;
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Fetching User List -- ${error.message}`);
-    }
-  }
-
-  async show(id: number): Promise<User> {
-    try {
-      const result = await this.executeQuery(
-        `SELECT * FROM users WHERE id = ${id};`
-      );
-      return result.rows[0];
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Fetching User with ID: ${id} -- ${error.message}`);
-    }
+    super(db, Table.USERS);
   }
 
   async create(user: User): Promise<User> {
@@ -51,18 +30,6 @@ class UserStore extends DataModel<User> {
     } catch (err) {
       const error = err as Error;
       throw new Error(`Creating New User -- ${error.message}`);
-    }
-  }
-
-  async delete(id: number): Promise<User> {
-    try {
-      const result = await this.executeQuery(
-        `DELETE FROM users WHERE id = ${id} RETURNING *`
-      );
-      return result.rows[0];
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Deleting User with ID: ${id} -- ${error.message}`);
     }
   }
 }

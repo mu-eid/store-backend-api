@@ -1,4 +1,5 @@
 import * as pg from 'pg';
+import { Table } from '../database';
 
 /**
  * DataModel can be extended by other model classes to
@@ -9,8 +10,8 @@ import * as pg from 'pg';
  * querying then releasing connection to the DB server.
  */
 
-class DataModel<T> {
-  constructor(private db: pg.Pool) {}
+abstract class DataModel<T> {
+  constructor(private db: pg.Pool, private table: Table) {}
 
   /**
    * Given a well formed SQL query, it will be executed
@@ -27,6 +28,44 @@ class DataModel<T> {
     } catch (err) {
       const error = err as Error;
       throw new Error(`Executing SQL Query: ${error.message}`);
+    }
+  }
+
+  async index(): Promise<T[]> {
+    try {
+      const result = await this.executeQuery(`SELECT * FROM ${this.table};`);
+      return result.rows;
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(`Fetching all ${this.table} list -- ${error.message}`);
+    }
+  }
+
+  async show(id: number): Promise<T> {
+    try {
+      const result = await this.executeQuery(
+        `SELECT * FROM ${this.table} WHERE id = ${id};`
+      );
+      return result.rows[0];
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(
+        `Fetching entity from ${this.table} with ID: ${id} -- ${error.message}`
+      );
+    }
+  }
+
+  async delete(id: number): Promise<T> {
+    try {
+      const result = await this.executeQuery(
+        `DELETE FROM ${this.table} WHERE id = ${id} RETURNING *`
+      );
+      return result.rows[0];
+    } catch (err) {
+      const error = err as Error;
+      throw new Error(
+        `Deleting entity from ${this.table} with ID: ${id} -- ${error.message}`
+      );
     }
   }
 }

@@ -1,4 +1,5 @@
 import * as pg from 'pg';
+import { Table } from '../database';
 import DataModel from './model';
 
 type Product = {
@@ -8,30 +9,8 @@ type Product = {
 };
 
 class ProductStore extends DataModel<Product> {
-  constructor(dbPool: pg.Pool) {
-    super(dbPool);
-  }
-
-  async index(): Promise<Product[]> {
-    try {
-      const result = await this.executeQuery(`SELECT * FROM products;`);
-      return result.rows;
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Fetching Product List -- ${error.message}`);
-    }
-  }
-
-  async show(id: number): Promise<Product> {
-    try {
-      const result = await this.executeQuery(
-        `SELECT * FROM products WHERE id = ${id}`
-      );
-      return result.rows[0];
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Fetching Product with ID: ${id} -- ${error.message}`);
-    }
+  constructor(db: pg.Pool) {
+    super(db, Table.PRODUCTS);
   }
 
   async create(product: Product): Promise<Product> {
@@ -44,17 +23,6 @@ class ProductStore extends DataModel<Product> {
     } catch (err) {
       const error = err as Error;
       throw new Error(`Creating New Product -- ${error.message}`);
-    }
-  }
-  async delete(id: number): Promise<Product> {
-    try {
-      const result = await this.executeQuery(
-        `DELETE FROM products WHERE id = ${id} RETURNING *`
-      );
-      return result.rows[0];
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Deleting Product with ID: ${id} -- ${error.message}`);
     }
   }
 }

@@ -1,4 +1,5 @@
 import * as pg from 'pg';
+import { Table } from '../database';
 import DataModel from './model';
 
 type Order = {
@@ -8,30 +9,8 @@ type Order = {
 };
 
 class OrderStore extends DataModel<Order> {
-  constructor(dbPool: pg.Pool) {
-    super(dbPool);
-  }
-
-  async index(): Promise<Order[]> {
-    try {
-      const result = await this.executeQuery(`SELECT * FROM orders;`);
-      return result.rows;
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Fetching Orders List -- ${error.message}`);
-    }
-  }
-
-  async show(id: number): Promise<Order> {
-    try {
-      const result = await this.executeQuery(
-        `SELECT * FROM orders WHERE id = ${id}`
-      );
-      return result.rows[0];
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Fetching Order with ID: ${id} -- ${error.message}`);
-    }
+  constructor(db: pg.Pool) {
+    super(db, Table.ORDERS);
   }
 
   async create(order: Order): Promise<Order> {
@@ -44,18 +23,6 @@ class OrderStore extends DataModel<Order> {
     } catch (err) {
       const error = err as Error;
       throw new Error(`Creating New Order -- ${error.message}`);
-    }
-  }
-
-  async delete(id: number): Promise<Order> {
-    try {
-      const result = await this.executeQuery(
-        `DELETE FROM orders WHERE id = ${id} RETURNING *;`
-      );
-      return result.rows[0];
-    } catch (err) {
-      const error = err as Error;
-      throw new Error(`Deleting Order with ID: ${id} -- ${error.message}`);
     }
   }
 

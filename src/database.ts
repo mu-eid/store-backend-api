@@ -15,4 +15,12 @@ const dbClient = new pg.Pool({
   database: process.env.NODE_ENV === 'dev' ? DB_DEV : DB_TEST,
 });
 
+// Table names constants
+export enum Table {
+  USERS = 'users',
+  PRODUCTS = 'products',
+  ORDERS = 'orders',
+  ORDER_ITEMS = 'order_items',
+}
+
 export default dbClient;

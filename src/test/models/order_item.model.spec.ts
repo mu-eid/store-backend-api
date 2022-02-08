@@ -48,7 +48,7 @@ describe('Order Items Actions', () => {
   describe('Deleting Items', () => {
     it('should delete all items in an order, given an order ID', async () => {
       const result = await model.deleteByOrder(1);
-      expect(result).toBe(1);
+      expect(result).toEqual(Array.of(itemMock));
     });
   });
 });
