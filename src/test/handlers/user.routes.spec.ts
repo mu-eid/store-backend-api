@@ -9,10 +9,10 @@ import { initTestDB } from '../../utils/db_migrator';
 describe('User API Endpoints', () => {
     const httpClient = httpTest.default(app);
 
-    let expectedResultRow: User;
+    let expectedResult: User;
 
     beforeAll(async () => {
-        expectedResultRow = {
+        expectedResult = {
             ...userMock,
             id: 1,
             password: await bcrypt.hash(
@@ -24,20 +24,8 @@ describe('User API Endpoints', () => {
         await initTestDB();
     });
 
-    /*  beforeEach(async () => {
-  });
- */
-    describe('GET /users', () => {
-        it('should return an empty response, when DB table is empty', async () => {
-            const resp = await httpClient.get('/users');
-            expect(resp.statusCode).toBe(200);
-            expect(resp.get('Content-Type')).toMatch(/json/);
-            expect(resp.body).toEqual([]);
-        });
-    });
-
     describe('POST /users', () => {
-        it('should create a new user, given well formed data', async () => {
+        it('should create a new user, given a well-formed user entity.', async () => {
             const resp = await httpClient
                 .post('/users')
                 .set('Accept', 'application/json')
@@ -45,19 +33,37 @@ describe('User API Endpoints', () => {
 
             expect(resp.statusCode).toBe(201);
             expect(resp.get('Content-Type')).toMatch(/json/);
-            expect(resp.body).toEqual(expectedResultRow);
+            expect(resp.body).toEqual(expectedResult);
+        });
+    });
+
+    describe('GET /users', () => {
+        it('should return non-empty list, when table is non-empty.', async () => {
+            const resp = await httpClient.get('/users');
+            expect(resp.statusCode).toBe(200);
+            expect(resp.get('Content-Type')).toMatch(/json/);
+            expect(resp.body).toEqual(Array.of(expectedResult));
         });
     });
 
     describe('DELETE /users/:id', () => {
-        it('should delete a user, given a user ID that exists in DB table', async () => {
+        it('should delete a user, given a user id that exists in table.', async () => {
             const resp = await httpClient
                 .delete('/users/1')
                 .set('Accept', 'application/json');
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
-            expect(resp.body).toEqual(expectedResultRow);
+            expect(resp.body).toEqual(expectedResult);
+        });
+    });
+
+    describe('GET /users', () => {
+        it('should return an empty list, when table is empty.', async () => {
+            const resp = await httpClient.get('/users');
+            expect(resp.statusCode).toBe(200);
+            expect(resp.get('Content-Type')).toMatch(/json/);
+            expect(resp.body).toEqual([]);
         });
     });
 });

@@ -1,24 +1,22 @@
 import * as httpTest from 'supertest';
 import { app } from '../../index';
-import { Product } from '../../models/product';
 import { initTestDB } from '../../utils/db_migrator';
 import { productMock } from '../models/mocks';
 
 describe('Products API Endpoints', () => {
     const httpClient = httpTest.default(app);
-    let expectedResultRow: Product;
+
+    let expectedResultRow = {
+        id: 1,
+        ...productMock,
+    };
 
     beforeAll(async () => {
-        expectedResultRow = {
-            id: 1,
-            ...productMock,
-        };
-
         await initTestDB();
     });
 
     describe('POST /products', () => {
-        it('should create a new product in database.', async () => {
+        it('should create a new product in table, given a well-formed product entity.', async () => {
             const resp = await httpClient
                 .post('/products')
                 .set('Accept', 'application/json')
@@ -40,7 +38,7 @@ describe('Products API Endpoints', () => {
     });
 
     describe('GET /products/:id', () => {
-        it('should retrieve a product, given a product ID that exists in database.', async () => {
+        it('should retrieve a product, given a product id that exists in table.', async () => {
             const resp = await httpClient
                 .get('/products/1')
                 .set('Accept', 'application/json');
@@ -52,7 +50,7 @@ describe('Products API Endpoints', () => {
     });
 
     describe('DELETE /products/:id', () => {
-        it('should delete a product, given a product ID that exists in database.', async () => {
+        it('should delete a product, given a product id that exists in table.', async () => {
             const resp = await httpClient
                 .delete('/products/1')
                 .set('Accept', 'application/json');

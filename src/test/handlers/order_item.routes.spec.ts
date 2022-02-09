@@ -20,7 +20,7 @@ describe('items API Endpoints', () => {
     });
 
     describe('POST /items', () => {
-        it('should create a new item in database, given an order and product IDs that exist in database.', async () => {
+        it('should create a new item in table, given an order and product IDs that exist in database.', async () => {
             const resp = await httpClient
                 .post('/items')
                 .set('Accept', 'application/json')
@@ -33,7 +33,7 @@ describe('items API Endpoints', () => {
     });
 
     describe('GET /items', () => {
-        it('should retrive a list of items found in database.', async () => {
+        it('should retrive a list of items found in table.', async () => {
             const resp = await httpClient.get('/items');
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
@@ -42,7 +42,7 @@ describe('items API Endpoints', () => {
     });
 
     describe('GET /items/order/:id', () => {
-        it('should retrieve an item list, given an order ID that exists in database.', async () => {
+        it('should retrieve an item list, given an order id that exists in database.', async () => {
             const resp = await httpClient
                 .get('/items/order/1')
                 .set('Accept', 'application/json');
@@ -54,7 +54,7 @@ describe('items API Endpoints', () => {
     });
 
     describe('GET /items/product/:id', () => {
-        it('should retrieve a list of items, given product ID that exists in database.', async () => {
+        it('should retrieve a list of items, given product id that exists in database.', async () => {
             const resp = await httpClient
                 .get('/items/product/1')
                 .set('Accept', 'application/json');
@@ -66,7 +66,7 @@ describe('items API Endpoints', () => {
     });
 
     describe('DELETE /items/order/:id', () => {
-        it('should delete an order, given an ID that exists in database.', async () => {
+        it('should delete an order, given an id that exists in database.', async () => {
             const resp = await httpClient
                 .delete('/items/order/1')
                 .set('Accept', 'application/json');
@@ -78,7 +78,7 @@ describe('items API Endpoints', () => {
     });
 
     describe('GET /items', () => {
-        it('should retrive an empty list of items, when items table is empty.', async () => {
+        it('should retrive an empty list, when items table is empty.', async () => {
             const resp = await httpClient.get('/items');
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
