@@ -1,49 +1,49 @@
 {
-  "name": "store-backend-api",
-  "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "npm run clear && npx tsc",
-    "start": "NODE_ENV=dev npm run build && node dist/index.js",
-    "serve": "NODE_ENV=dev npx nodemon src/index.ts",
-    "test": "NODE_ENV=test npm run build && npx jasmine",
-    "fmt": "npx prettier --write .",
-    "clear": "npx rimraf dist/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mu-eid/store-backend-api.git"
-  },
-  "keywords": [],
-  "author": "Muhammad Eid",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mu-eid/store-backend-api/issues"
-  },
-  "homepage": "https://github.com/mu-eid/store-backend-api#readme",
-  "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
-    "@types/express": "^4.17.13",
-    "@types/jasmine": "^3.10.3",
-    "@types/node": "^17.0.13",
-    "@types/pg": "^8.6.4",
-    "@types/supertest": "^2.0.11",
-    "db-migrate": "^0.11.13",
-    "db-migrate-pg": "^1.2.2",
-    "jasmine": "^4.0.2",
-    "jasmine-spec-reporter": "^7.0.0",
-    "nodemon": "^2.0.15",
-    "prettier": "^2.5.1",
-    "rimraf": "^3.0.2",
-    "supertest": "^6.2.2",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.5"
-  },
-  "dependencies": {
-    "bcrypt": "^5.0.1",
-    "dotenv": "^14.3.2",
-    "express": "^4.17.2",
-    "pg": "^8.7.1"
-  }
+    "name": "store-backend-api",
+    "version": "0.1.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "npm run clear && npx tsc",
+        "start": "NODE_ENV=dev npm run build && node dist/index.js",
+        "serve": "NODE_ENV=dev npx nodemon src/index.ts",
+        "test": "NODE_ENV=test npm run build && npx jasmine",
+        "fmt": "npx prettier --write .",
+        "clear": "npx rimraf dist/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mu-eid/store-backend-api.git"
+    },
+    "keywords": [],
+    "author": "Muhammad Eid",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/mu-eid/store-backend-api/issues"
+    },
+    "homepage": "https://github.com/mu-eid/store-backend-api#readme",
+    "devDependencies": {
+        "@types/bcrypt": "^5.0.0",
+        "@types/express": "^4.17.13",
+        "@types/jasmine": "^3.10.3",
+        "@types/node": "^17.0.13",
+        "@types/pg": "^8.6.4",
+        "@types/supertest": "^2.0.11",
+        "db-migrate": "^0.11.13",
+        "db-migrate-pg": "^1.2.2",
+        "jasmine": "^4.0.2",
+        "jasmine-spec-reporter": "^7.0.0",
+        "nodemon": "^2.0.15",
+        "prettier": "^2.5.1",
+        "rimraf": "^3.0.2",
+        "supertest": "^6.2.2",
+        "ts-node": "^10.4.0",
+        "typescript": "^4.5.5"
+    },
+    "dependencies": {
+        "bcrypt": "^5.0.1",
+        "dotenv": "^14.3.2",
+        "express": "^4.17.2",
+        "pg": "^8.7.1"
+    }
 }

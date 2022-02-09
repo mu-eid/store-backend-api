@@ -27,26 +27,26 @@ orderRoutes(app);
 itemRoutes(app);
 
 app.get('/hallo', async (req: Request, resp: Response): Promise<void> => {
-  try {
-    const conn = await dbClient.connect();
-    const sqlQuery = `SELECT $1 AS greeting;`;
-    const result = await conn.query(sqlQuery, ['Leute!']);
-    conn.release();
-    resp.json({ hallo: result.rows[0]['greeting'] });
-  } catch (err) {
-    resp.status(500).json({
-      error: {
-        When: 'While requesting GET /hallo',
-        Reason: (err as Error).message,
-      },
-    });
-  }
+    try {
+        const conn = await dbClient.connect();
+        const sqlQuery = `SELECT $1 AS greeting;`;
+        const result = await conn.query(sqlQuery, ['Leute!']);
+        conn.release();
+        resp.json({ hallo: result.rows[0]['greeting'] });
+    } catch (err) {
+        resp.status(500).json({
+            error: {
+                When: 'While requesting GET /hallo',
+                Reason: (err as Error).message,
+            },
+        });
+    }
 });
 
 app.listen(APP_PORT, async (): Promise<void> => {
-  console.log(`Server is listening at http://${APP_HOST}:${APP_PORT}`);
+    console.log(`Server is listening at http://${APP_HOST}:${APP_PORT}`);
 
-  if (ENV_VARS.error) console.log(ENV_VARS.error);
+    if (ENV_VARS.error) console.log(ENV_VARS.error);
 
-  console.log(ENV_VARS.parsed);
+    console.log(ENV_VARS.parsed);
 });
