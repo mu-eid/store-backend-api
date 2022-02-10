@@ -6,8 +6,8 @@ import dbClient from './database';
 import { initDevDB } from './utils/db_migrator';
 import userRoutes from './handlers/user.routes';
 import productRoutes from './handlers/product.routes';
-import { orderRoutes } from './handlers/order.routes';
-import { itemRoutes } from './handlers/order_item.routes';
+import orderRoutes from './handlers/order.routes';
+import itemRoutes from './handlers/order_item.routes';
 
 const ENV_VARS = dotenv.config({ path: ENV_PATH });
 const { APP_HOST, APP_PORT } = process.env;

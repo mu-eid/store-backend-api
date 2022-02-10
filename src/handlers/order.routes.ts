@@ -118,4 +118,4 @@ const orderRoutes = (app: Application) => {
     app.delete('/orders/:id', checkID, destroy);
 };
 
-export { orderRoutes };
+export default orderRoutes;

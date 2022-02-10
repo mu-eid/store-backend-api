@@ -108,4 +108,4 @@ const itemRoutes = (app: Application): void => {
     app.delete('/items/order/:id', checkID, deleteByOrder);
 };
 
-export { itemRoutes };
+export default itemRoutes;
