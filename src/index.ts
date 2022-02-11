@@ -8,6 +8,7 @@ import userRoutes from './handlers/user.routes';
 import productRoutes from './handlers/product.routes';
 import orderRoutes from './handlers/order.routes';
 import itemRoutes from './handlers/order_item.routes';
+import { logger } from './handlers/middleware/logger';
 
 // Start DB migrations
 initDevDB();
@@ -16,6 +17,7 @@ export const app = express();
 
 // Use JSON body parser
 app.use(express.json());
+app.use(logger);
 
 // Attach API endpoints
 userRoutes(app);
