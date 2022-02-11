@@ -10,7 +10,7 @@ import orderRoutes from './handlers/order.routes';
 import itemRoutes from './handlers/order_item.routes';
 
 const ENV_VARS = dotenv.config({ path: ENV_PATH });
-const { APP_HOST, APP_PORT } = process.env;
+const { HOST, PORT } = process.env;
 
 process.on('uncaughtException', (err) => console.error(err));
 
@@ -43,8 +43,8 @@ app.get('/hallo', async (req: Request, resp: Response): Promise<void> => {
     }
 });
 
-app.listen(APP_PORT, async (): Promise<void> => {
-    console.log(`Server is listening at http://${APP_HOST}:${APP_PORT}`);
+app.listen(PORT, async (): Promise<void> => {
+    console.log(`Server is listening at http://${HOST}:${PORT}`);
 
     if (ENV_VARS.error) console.log(ENV_VARS.error);
 
