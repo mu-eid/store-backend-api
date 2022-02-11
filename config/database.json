@@ -2,16 +2,16 @@
     "sql_file": true,
     "dev": {
         "driver": "pg",
-        "user": { "ENV": "PG_USER" },
-        "password": { "ENV": "PG_PASS" },
-        "host": { "ENV": "PG_HOST" },
-        "database": { "ENV": "DB_DEV" }
+        "user": "postgres",
+        "password": "12345",
+        "host": "localhost",
+        "database": "store_dev"
     },
     "test": {
         "driver": "pg",
-        "user": { "ENV": "PG_USER" },
-        "password": { "ENV": "PG_PASS" },
-        "host": { "ENV": "PG_HOST" },
-        "database": { "ENV": "DB_TEST" }
+        "user": "postgres",
+        "password": "12345",
+        "host": "localhost",
+        "database": "store_test"
     }
 }
