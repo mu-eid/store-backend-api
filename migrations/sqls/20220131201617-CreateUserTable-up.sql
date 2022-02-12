@@ -1,5 +1,5 @@
 CREATE TABLE
-    users (
+    IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         first_name VARCHAR(32) NOT NULL,
         last_name VARCHAR(32) NOT NULL,

@@ -2,16 +2,16 @@
     "sql_file": true,
     "dev": {
         "driver": "pg",
-        "user": "postgres",
-        "password": "12345",
+        "user": "store_user",
+        "password": "2345",
         "host": "localhost",
-        "database": "store_dev"
+        "database": "store_dev_db"
     },
     "test": {
         "driver": "pg",
-        "user": "postgres",
-        "password": "12345",
+        "user": "store_user",
+        "password": "2345",
         "host": "localhost",
-        "database": "store_test"
+        "database": "store_test_db"
     }
 }
