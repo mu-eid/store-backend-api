@@ -1,4 +1,5 @@
 import { Application, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
 
 import dbClient from '../database';
 import { UserStore } from '../models/user';
@@ -29,11 +30,9 @@ const show = async (req: Request, resp: Response): Promise<void> => {
 
         result
             ? resp.json(result)
-            : resp
-                  .status(404)
-                  .json({
-                      message: `No such user with ID: ${id} found in database`,
-                  });
+            : resp.status(404).json({
+                  message: `No such user with ID: ${id} found in database`,
+              });
     } catch (err) {
         resp.status(500).json({
             error: {
@@ -54,7 +53,18 @@ const create = async (req: Request, resp: Response): Promise<void> => {
             password: password,
         });
 
-        resp.status(201).json(user);
+        const payload = { // JWT payload
+            sub: user.id,
+            first_name: first_name,
+            last_name: last_name,
+        };
+
+        const token = jwt.sign(payload, process.env.SIGN_HASH as string);
+
+        resp.status(201).json({ 
+            created: payload,
+            token: token,
+        });
     } catch (err) {
         resp.status(500).json({
             error: {
