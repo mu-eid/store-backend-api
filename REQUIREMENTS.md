@@ -6,15 +6,6 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 
-### Products
-
-| Action  | HTTP   | URI           |  Token   |
-| :------ | :----- | :------------ | :------: |
-| Index   | GET    | /products     |    -     |
-| Show    | GET    | /products/:id |    -     |
-| Create  | POST   | /products     | Required |
-| Destroy | DELETE | /products/:id | Required |
-
 ### Users
 
 | Action  | HTTP   | URI        |  Token   |
@@ -24,48 +15,61 @@ These are the notes from a meeting with the frontend developer that describe wha
 | Create  | POST   | /users     | Required |
 | Destroy | DELETE | /users/:id | Required |
 
+### Products
+
+| Action  | HTTP   | URI           |  Token   |
+| :------ | :----- | :------------ | :------: |
+| Index   | GET    | /products     |   None   |
+| Show    | GET    | /products/:id |   None   |
+| Create  | POST   | /products     | Required |
+| Destroy | DELETE | /products/:id | Required |
+
 ### Orders
 
--   Index [token required]
--   Show [token required]
--   Create [token required]
--   Delete [token required]
-
--   Current Order by user (args: user id)[token required]
--   [OPTIONAL] Completed Orders by user (args: user id)[token required]
+| Action         | HTTP   | URI               |  Token   |
+| :------------- | :----- | :---------------- | :------: |
+| Index          | GET    | /orders           | Required |
+| Show           | GET    | /orders/:id       | Required |
+| Show (user_id) | DELETE | /orders/users/:id | Required |
+| Create         | POST   | /orders           | Required |
+| Destroy        | DELETE | /orders/:id       | Required |
 
 ### Order_Items
 
--   Index
--   IndexByOrderID
--   IndexByProductID
+| Action            | HTTP | URI                | Token |
+| :---------------- | :--- | :----------------- | :---: |
+| Index             | GET  | /items             | None  |
+| Show (order_id)   | GET  | /items/order/:id   | None  |
+| Show (product_id) | GET  | /items/product/:id | None  |
 
-## DATABASE SCHEMA
+**NOTE**: Every _item_ in and _order_ reflects a product from _products_ table.
+
+## Database Schema
 
 ### Products
 
 | Name  |     Type      | Constraint |
 | :---: | :-----------: | :--------: |
 |  id   |    INTEGER    |     PK     |
-| name  |  VARCHAR(64)  |     -      |
-| price | NUMERIC(6, 2) |     -      |
+| name  |  VARCHAR(64)  |  NOT NULL  |
+| price | NUMERIC(6, 2) |  NOT NULL  |
 
 ### Users
 
 |    Name    |    Type     | Constraint |
 | :--------: | :---------: | :--------: |
 |     id     |   INTEGER   |     PK     |
-| first_name | VARCHAR(32) |     -      |
-| last_name  | VARCHAR(32) |     -      |
-|  password  |  CHAR(60)   |     -      |
+| first_name | VARCHAR(32) |  NOT NULL  |
+| last_name  | VARCHAR(32) |  NOT NULL  |
+|  password  |  CHAR(60)   |  NOT NULL  |
 
 ### Orders
 
-|   Name    |  Type   | Constraint |
-| :-------: | :-----: | :--------: |
-|    id     | INTEGER |     PK     |
-|  user_id  | INTEGER |     FK     |
-| compelete | BOOLEAN |     -      |
+|   Name    |  Type   |  Constraint   |
+| :-------: | :-----: | :-----------: |
+|    id     | INTEGER |      PK       |
+|  user_id  | INTEGER |      FK       |
+| compelete | BOOLEAN | DEFAULT FALSE |
 
 ### Order_Items
 
