@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 
-import dbClient from '../../database';
+import dbClient, { Table } from '../../database';
 import { User, UserStore } from '../../models/user';
 import { initTestDB } from '../../utils/db_migrator';
 import { userMock } from './mocks';
@@ -13,7 +13,7 @@ describe('User Data Model Actions', () => {
     beforeAll(async () => {
         expectedResult = {
             ...userMock,
-            id: 1,
+            id: 2,
             password: await bcrypt.hash(
                 userMock.password,
                 process.env.SALT_HASH as string
@@ -32,7 +32,7 @@ describe('User Data Model Actions', () => {
 
     describe('Showing a user by ID', () => {
         it('should return a result that contains a user with that id from table.', async () => {
-            const result = await model.show(1);
+            const result = await model.show(2);
             expect(result).toEqual(expectedResult);
         });
     });
@@ -41,21 +41,23 @@ describe('User Data Model Actions', () => {
         describe('When users table is non-empty', () => {
             it('should return a list of one entity at least.', async () => {
                 const result = await model.index();
-                expect(result).toEqual(Array.of(expectedResult));
+                expect(result.length).toBe(2);
+                expect(result[1]).toEqual(expectedResult);
             });
         });
     });
 
     describe('Deleting a user by ID', () => {
         it('should delete a user, given a user id that exists in table', async () => {
-            const result = await model.delete(1);
+            const result = await model.delete(2);
             expect(result).toEqual(expectedResult);
         });
     });
 
     describe('Indexing Users', () => {
         describe('When users table is Empty', () => {
-            it('should return an empty list.', async () => {
+            it('should return an empty result.', async () => {
+                await model.executeQuery(`DELETE FROM ${Table.USERS};`); // Delete all rows
                 const result = await model.index();
                 expect(result).toEqual([]);
             });

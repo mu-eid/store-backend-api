@@ -44,6 +44,6 @@ app.get('/admin', (req: Request, resp: Response): void => {
 
 const { HOST, PORT } = process.env;
 
-app.listen(PORT, ():void => {
+app.listen(PORT, (): void => {
     console.log(`Server is listening at http://${HOST}:${PORT}/status`);
 });
