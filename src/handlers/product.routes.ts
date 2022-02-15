@@ -4,6 +4,7 @@ import { checkProductPayload } from './middleware/product';
 import { checkID } from './middleware/id-checker';
 import dbClient from '../database';
 import { ProductStore } from '../models/product';
+import authorize from './middleware/authorize';
 
 const model = new ProductStore(dbClient);
 
@@ -84,8 +85,8 @@ const destroy = async (req: Request, resp: Response): Promise<void> => {
 function productRoutes(app: Application): void {
     app.get('/products', index);
     app.get('/products/:id', checkID, show);
-    app.post('/products', checkProductPayload, create);
-    app.delete('/products/:id', checkID, destroy);
+    app.post('/products', authorize, checkProductPayload, create);
+    app.delete('/products/:id', authorize, checkID, destroy);
 }
 
 export default productRoutes;

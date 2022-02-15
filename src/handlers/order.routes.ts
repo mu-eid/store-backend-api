@@ -2,6 +2,7 @@ import { Application, Request, Response } from 'express';
 
 import dbClient from '../database';
 import { Order, OrderStore } from '../models/order';
+import authorize from './middleware/authorize';
 import { checkID } from './middleware/id-checker';
 import { checkOrderEntity } from './middleware/order';
 
@@ -111,11 +112,11 @@ const destroy = async (req: Request, resp: Response): Promise<void> => {
 };
 
 const orderRoutes = (app: Application) => {
-    app.get('/orders', index);
-    app.get('/orders/users/:id', checkID, indexOrdersByUserID);
-    app.get('/orders/:id', checkID, show);
-    app.post('/orders', checkOrderEntity, create);
-    app.delete('/orders/:id', checkID, destroy);
+    app.get('/orders', authorize, index);
+    app.get('/orders/users/:id', authorize, checkID, indexOrdersByUserID);
+    app.get('/orders/:id', authorize, checkID, show);
+    app.post('/orders', authorize, checkOrderEntity, create);
+    app.delete('/orders/:id', authorize, checkID, destroy);
 };
 
 export default orderRoutes;
