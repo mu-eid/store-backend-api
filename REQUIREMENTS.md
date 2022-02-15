@@ -42,7 +42,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 | Show (order_id)   | GET  | /items/order/:id   | None  |
 | Show (product_id) | GET  | /items/product/:id | None  |
 
-**NOTE**: Every _item_ in and _order_ reflects a product from _products_ table.
+**NOTE**: Every _item_ in an _order_ reflects a product from _products_ table.
 
 ## Database Schema
 

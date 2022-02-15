@@ -21,26 +21,36 @@ const test_migrator = db_migrate.getInstance(true, {
     env: 'test',
 });
 
+// Disable logs of applied migrations
+// to reduce info noise while developing or testing
 dev_migrator.silence(true);
 test_migrator.silence(true);
 
 function initDevDB() {
-    console.info('------------ Init Dev Database -------------');
+    console.info(
+        '[INFO]: ----------------- Setting up Development Database ------------------'
+    );
     return dev_migrator.reset().then(() => dev_migrator.up());
 }
 
 function resetDevDB() {
-    console.info('------------ Reset Dev Database -------------');
+    console.info(
+        '[INFO]: ----------------- Resetting Development Database -------------------'
+    );
     return dev_migrator.reset();
 }
 
 function initTestDB() {
-    console.info('----------- Init Test Database -------------');
+    console.info(
+        '[INFO]: ----------------- Setting up Testing Database ----------------------'
+    );
     return test_migrator.reset().then(() => test_migrator.up());
 }
 
 function resetTestDB() {
-    console.info('----------- Reset Test Database -------------');
+    console.info(
+        '[INFO]: ----------------- Resetting Testing Database -----------------------'
+    );
     return test_migrator.reset();
 }
 
