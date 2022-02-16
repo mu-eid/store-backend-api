@@ -63,4 +63,44 @@ describe('User Data Model Actions', () => {
             });
         });
     });
+
+    describe('Updating user data', () => {
+        const update = {
+            first_name: 'FirstNameUpdated',
+            last_name: 'LastNameUpdated',
+            password: 'PasswordUdated',
+        };
+
+        let id: number;
+
+        beforeAll(async () => {
+            const result = await model.create(userMock);
+            id = result.id as number;
+        });
+
+        describe('Updating first name', () => {
+            it("should update the user's first name, given a name value.", async () => {
+                const result = await model.updateFirstName(
+                    id,
+                    update.first_name
+                );
+                expect(result.first_name).toBe(update.first_name);
+            });
+        });
+
+        describe('Updating last name', () => {
+            it("should update the user's last name, given a name value.", async () => {
+                const result = await model.updateLastName(id, update.last_name);
+                expect(result.last_name).toBe(update.last_name);
+            });
+        });
+
+        describe('Updating password', () => {
+            it("should update the user's first name, given a name value.", async () => {
+                const result = await model.updatePassword(id, update.password);
+                expect(result.password).toBeDefined();
+                expect(result.password.length).toBe(60);
+            });
+        });
+    });
 });
