@@ -2,6 +2,7 @@ import { Application, Request, Response } from 'express';
 
 import dbClient from '../database';
 import { Item, ItemStore } from '../models/order_item';
+import authorize from './middleware/authorize';
 
 import { checkID } from './middleware/id-checker';
 import { checkItemEntity } from './middleware/item';
@@ -101,11 +102,11 @@ const deleteByOrder = async (req: Request, resp: Response): Promise<void> => {
 };
 
 const itemRoutes = (app: Application): void => {
-    app.get('/items', index);
-    app.get('/items/order/:id', checkID, indexByOrder);
-    app.get('/items/product/:id', checkID, indexByProduct);
-    app.post('/items', checkItemEntity, create);
-    app.delete('/items/order/:id', checkID, deleteByOrder);
+    app.get('/items', authorize, index);
+    app.get('/items/order/:id', authorize, checkID, indexByOrder);
+    app.get('/items/product/:id', authorize, checkID, indexByProduct);
+    app.post('/items', authorize, checkItemEntity, create);
+    app.delete('/items/order/:id', authorize, checkID, deleteByOrder);
 };
 
 export default itemRoutes;
