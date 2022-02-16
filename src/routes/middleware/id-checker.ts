@@ -16,4 +16,23 @@ const checkID = (req: Request, resp: Response, next: NextFunction): void => {
     next();
 };
 
-export { checkID };
+const exceptAdmin = (
+    req: Request,
+    resp: Response,
+    next: NextFunction
+): void => {
+    const param = req.params['id'];
+    const id = parseInt(param, 10);
+
+    if (id === 1) {
+        resp.status(418).json({
+            error: {
+                reason: 'Cannot delete the admin user.',
+            },
+        });
+        return;
+    }
+    next();
+};
+
+export { checkID, exceptAdmin };

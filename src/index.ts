@@ -37,7 +37,8 @@ app.get('/status', async (req: Request, resp: Response): Promise<void> => {
 
 app.get('/admin', (req: Request, resp: Response): void => {
     resp.json({
-        message: 'Admin user token',
+        message:
+            'Admin user token, use it to make (token required) API requests.',
         token: getAdminToken(),
     });
 });

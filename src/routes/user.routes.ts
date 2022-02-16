@@ -5,7 +5,7 @@ import dbClient from '../database';
 import { User, UserStore } from '../models/user';
 import { stripUserPassword, toUserPayload } from '../utils/user';
 import authorize from './middleware/authorize';
-import { checkID } from './middleware/id-checker';
+import { checkID, exceptAdmin } from './middleware/id-checker';
 import { checkUserPayload } from './middleware/user';
 
 const model = new UserStore(dbClient);
@@ -107,7 +107,7 @@ function userRoutes(app: Application): void {
     app.get('/users', authorize, index);
     app.get('/users/:id', authorize, checkID, show);
     app.post('/users', authorize, checkUserPayload, create);
-    app.delete('/users/:id', authorize, checkID, destroy);
+    app.delete('/users/:id', authorize, checkID, exceptAdmin, destroy);
 }
 
 export default userRoutes;
