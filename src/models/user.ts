@@ -21,9 +21,9 @@ class UserStore extends DataModel<User> {
             const pass_digest = await encryptPassword(user.password);
 
             const result = await this.executeQuery(
-                `INSERT INTO users (first_name, last_name, password) VALUES` +
-                    ` ('${user.first_name}', '${user.last_name}', '${pass_digest}')` +
-                    ` RETURNING *`
+                `INSERT INTO ${Table.USERS} (first_name, last_name, password) 
+                 VALUES ('${user.first_name}', '${user.last_name}', '${pass_digest}')
+                 RETURNING *`
             );
             return result.rows[0];
         } catch (err) {

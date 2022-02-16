@@ -16,8 +16,9 @@ class OrderStore extends DataModel<Order> {
     async create(order: Order): Promise<Order> {
         try {
             const result = await this.executeQuery(
-                `INSERT INTO orders (user_id, complete) VALUES` +
-                    `(${order.user_id}, ${order.complete}) RETURNING *`
+                `INSERT INTO ${Table.ORDERS} (user_id, complete) 
+                 VALUES (${order.user_id}, ${order.complete}) 
+                 RETURNING *`
             );
             return result.rows[0];
         } catch (err) {
@@ -29,7 +30,7 @@ class OrderStore extends DataModel<Order> {
     async indexOrdersByUser(id: number): Promise<Order[]> {
         try {
             const result = await this.executeQuery(
-                `SELECT * FROM orders WHERE user_id = ${id};`
+                `SELECT * FROM ${Table.ORDERS} WHERE user_id = ${id};`
             );
             return result.rows;
         } catch (err) {
@@ -43,7 +44,9 @@ class OrderStore extends DataModel<Order> {
     async indexCompleteByUser(id: number): Promise<Order[]> {
         try {
             const result = await this.executeQuery(
-                `SELECT * FROM orders WHERE user_id = ${id} AND complete = true;`
+                `SELECT * FROM ${Table.ORDERS} 
+                 WHERE user_id = ${id} 
+                 AND complete = true;`
             );
             return result.rows;
         } catch (err) {

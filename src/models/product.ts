@@ -16,8 +16,9 @@ class ProductStore extends DataModel<Product> {
     async create(product: Product): Promise<Product> {
         try {
             const result = await this.executeQuery(
-                `INSERT INTO products (name, price) VALUES` +
-                    ` ('${product.name}', ${product.price}) RETURNING *`
+                `INSERT INTO ${Table.PRODUCTS} (name, price) 
+                 VALUES ('${product.name}', ${product.price}) 
+                 RETURNING *`
             );
             return result.rows[0];
         } catch (err) {
