@@ -1,17 +1,17 @@
 {
-    "sql_file": true,
     "dev": {
         "driver": "pg",
         "user": "store_user",
         "password": "2345",
-        "host": "localhost",
+        "host": "127.0.0.1",
         "database": "store_dev_db"
     },
     "test": {
         "driver": "pg",
         "user": "store_user",
         "password": "2345",
-        "host": "localhost",
+        "host": "127.0.0.1",
         "database": "store_test_db"
-    }
+    },
+    "sql_file": true
 }
