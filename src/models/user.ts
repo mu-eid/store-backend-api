@@ -1,7 +1,8 @@
 import * as pg from 'pg';
-import * as bcrypt from 'bcrypt';
+
 import DataModel from './model';
 import { Table } from '../database';
+import { encryptPassword } from '../utils/user';
 
 type User = {
     id?: number;
@@ -17,10 +18,8 @@ class UserStore extends DataModel<User> {
 
     async create(user: User): Promise<User> {
         try {
-            const pass_digest = await bcrypt.hash(
-                user.password,
-                process.env.SALT_HASH as string
-            );
+            const pass_digest = await encryptPassword(user.password);
+
             const result = await this.executeQuery(
                 `INSERT INTO users (first_name, last_name, password) VALUES` +
                     ` ('${user.first_name}', '${user.last_name}', '${pass_digest}')` +

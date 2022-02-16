@@ -1,4 +1,6 @@
 import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
+
 import { User } from '../models/user';
 
 /**
@@ -39,6 +41,11 @@ const generateUserToken = (payload: UserPayload): string => {
     return jwt.sign(payload, process.env.SIGN_HASH as string);
 };
 
+const encryptPassword = async (password: string): Promise<string> => {
+    const digest = await bcrypt.hash(password, process.env.SALT_HASH as string);
+    return digest;
+};
+
 const getAdminToken = () => generateUserToken(toUserPayload(adminUser));
 
 export {
@@ -50,6 +57,7 @@ export {
     /**
      * Utility functions
      */
+    encryptPassword,
     stripUserPassword,
     toUserPayload,
     adminUser,
