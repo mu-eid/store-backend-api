@@ -4,3 +4,7 @@ node_modules/
 # Artifacts
 dist/
 coverage/
+
+# ENV VARS
+*/.env
+.env
