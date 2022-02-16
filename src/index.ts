@@ -5,11 +5,11 @@ dotenv.config({ path: ENV_PATH });
 import express, { Request, Response } from 'express';
 
 import { initDevDB } from './utils/db_migrator';
-import userRoutes from './handlers/user.routes';
-import productRoutes from './handlers/product.routes';
-import orderRoutes from './handlers/order.routes';
-import itemRoutes from './handlers/order_item.routes';
-import { logger } from './handlers/middleware/logger';
+import userRoutes from './routes/user.routes';
+import productRoutes from './routes/product.routes';
+import orderRoutes from './routes/order.routes';
+import itemRoutes from './routes/order_item.routes';
+import { logger } from './routes/middleware/logger';
 import { getAdminToken } from './utils/user';
 
 // Start database migrations
