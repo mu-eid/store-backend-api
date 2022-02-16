@@ -12,11 +12,14 @@ import {
 describe('USERS API ROUTES', () => {
     const httpClient = httpTest.default(app);
 
-    const expectedResult = {
-        created: {
-            ...stripUserPassword(userMock),
-            id: 2,
-        },
+    const expectedPayload = {
+        ...stripUserPassword(userMock),
+        id: 2,
+    };
+
+    // Expected response sturcture
+    const expectedEntityResp = {
+        user: expectedPayload,
     };
 
     const adminToken = getAdminToken();
@@ -39,50 +42,63 @@ describe('USERS API ROUTES', () => {
                     token: string;
                 };
 
+                const expectedEntityResp = {
+                    created: expectedPayload,
+                };
+
                 expect(resp.statusCode).toBe(201);
                 expect(resp.get('Content-Type')).toMatch(/json/);
                 expect(token).toBeDefined();
-                expect(created).toEqual(expectedResult.created);
+                expect(created).toEqual(expectedEntityResp.created);
             });
         });
 
-        describe('GET /users -- [Token Required]', () => {
-            it('should return non-empty list, when table is non-empty.', async () => {
+        describe('GET /users/:id -- [Token Required]', () => {
+            it('should return a user entity, given a user id that exists in database.', async () => {
                 const resp = await httpClient
-                    .get('/users')
+                    .get('/users/2')
                     .set('Authorization', `Bearer ${adminToken}`);
 
                 expect(resp.statusCode).toBe(200);
                 expect(resp.get('Content-Type')).toMatch(/json/);
-                expect(Array.isArray(resp.body)).toBeTrue();
-                expect(resp.body.length).toBe(2);
-                expect(resp.body[1]).toEqual(expectedResult.created);
+                expect(resp.body).toEqual(expectedEntityResp);
             });
         });
+    });
 
-        describe('DELETE /users/:id -- [Token Required]', () => {
-            it('should delete a user, given a user id that exists in table.', async () => {
-                const resp = await httpClient
-                    .delete('/users/2')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${adminToken}`);
+    describe('GET /users -- [Token Required]', () => {
+        it('should return non-empty list, when table is non-empty.', async () => {
+            const resp = await httpClient
+                .get('/users')
+                .set('Authorization', `Bearer ${adminToken}`);
 
-                expect(resp.statusCode).toBe(200);
-                expect(resp.get('Content-Type')).toMatch(/json/);
-                expect(resp.body).toEqual(expectedResult.created);
-            });
+            expect(resp.statusCode).toBe(200);
+            expect(resp.get('Content-Type')).toMatch(/json/);
+            expect(Array.isArray(resp.body)).toBeTrue();
+
+            // At this state, it should be the case that
+            // there are 2 users in users table one mock admin
+            // and another newly created user.
+            expect(resp.body.length).toBe(2);
+            expect(resp.body[1]).toEqual(expectedEntityResp);
         });
+    });
 
-        xdescribe('GET /users -- [Token Required]', () => {
-            it('should return an empty list, when table is empty.', async () => {
-                const resp = await httpClient
-                    .get('/users')
-                    .set('Authorization', `Bearer ${adminToken}`);
+    describe('DELETE /users/:id -- [Token Required]', () => {
+        it('should delete a user, given a user id that exists in table.', async () => {
+            const resp = await httpClient
+                .delete('/users/2')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${adminToken}`);
 
-                expect(resp.statusCode).toBe(200);
-                expect(resp.get('Content-Type')).toMatch(/json/);
-                expect(resp.body).toEqual([]);
-            });
+            // Expected response sturcture
+            const expectedDeleteResp = {
+                deleted: expectedEntityResp,
+            };
+
+            expect(resp.statusCode).toBe(200);
+            expect(resp.get('Content-Type')).toMatch(/json/);
+            expect(resp.body).toEqual(expectedDeleteResp);
         });
     });
 });

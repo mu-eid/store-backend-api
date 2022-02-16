@@ -14,7 +14,11 @@ const model = new UserStore(dbClient);
 const index = async (req: Request, resp: Response): Promise<void> => {
     try {
         const result = await model.index();
-        resp.json(result.map(stripUserPassword));
+        resp.json(
+            result.map((u) => {
+                return { user: stripUserPassword(u) };
+            })
+        );
     } catch (err) {
         resp.status(500).json({
             error: {
@@ -33,7 +37,9 @@ const show = async (req: Request, resp: Response): Promise<void> => {
         const result = await model.show(id);
 
         result
-            ? resp.json(stripUserPassword(result))
+            ? resp.json({
+                  user: stripUserPassword(result),
+              })
             : resp.status(404).json({
                   message: `No such user with id: ${id} in database`,
               });
@@ -53,18 +59,18 @@ const create = async (req: Request, resp: Response): Promise<void> => {
 
     try {
         // Insert user credentials into database
-        const user = await model.create({
+        const entity = await model.create({
             first_name: first_name,
             last_name: last_name,
             password: password,
         });
 
         // Create authorization token
-        const payload = toUserPayload(user);
+        const payload = toUserPayload(entity);
         const token = jwt.sign(payload, process.env.SIGN_HASH as string);
 
         resp.status(201).json({
-            created: stripUserPassword(user),
+            created: stripUserPassword(entity),
             token: token,
         });
     } catch (err) {
@@ -85,7 +91,7 @@ const destroy = async (req: Request, resp: Response): Promise<void> => {
         const result = await model.delete(id);
 
         result
-            ? resp.json(stripUserPassword(result))
+            ? resp.json({ deleted: { user: stripUserPassword(result) } })
             : resp.status(404).json({ message: 'No such user in database' });
     } catch (err) {
         resp.status(500).json({
