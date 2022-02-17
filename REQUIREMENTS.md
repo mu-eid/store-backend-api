@@ -30,29 +30,23 @@ These are the notes from a meeting with the frontend developer that describe wha
 | :------------- | :----- | :---------------- | :------: |
 | Index          | GET    | /orders           | Required |
 | Show           | GET    | /orders/:id       | Required |
-| Show (user_id) | DELETE | /orders/users/:id | Required |
+| Show (user_id) | GET    | /orders/users/:id | Required |
 | Create         | POST   | /orders           | Required |
 | Destroy        | DELETE | /orders/:id       | Required |
 
 ### Order_Items
 
-| Action            | HTTP | URI                | Token |
-| :---------------- | :--- | :----------------- | :---: |
-| Index             | GET  | /items             | None  |
-| Show (order_id)   | GET  | /items/order/:id   | None  |
-| Show (product_id) | GET  | /items/product/:id | None  |
+| Action            | HTTP   | URI                |  Token   |
+| :---------------- | :----- | :----------------- | :------: |
+| Index             | GET    | /items             | Required |
+| Show (order_id)   | GET    | /items/order/:id   | Required |
+| Show (product_id) | GET    | /items/product/:id | Required |
+| Create            | POST   | /items             | Required |
+| Destroy           | DELETE | /items/:id         | Required |
 
 **NOTE**: Every _item_ in an _order_ reflects a product from _products_ table.
 
 ## Database Schema
-
-### Products
-
-| Name  |     Type      | Constraint |
-| :---: | :-----------: | :--------: |
-|  id   |    INTEGER    |     PK     |
-| name  |  VARCHAR(64)  |  NOT NULL  |
-| price | NUMERIC(6, 2) |  NOT NULL  |
 
 ### Users
 
@@ -62,6 +56,14 @@ These are the notes from a meeting with the frontend developer that describe wha
 | first_name | VARCHAR(32) |  NOT NULL  |
 | last_name  | VARCHAR(32) |  NOT NULL  |
 |  password  |  CHAR(60)   |  NOT NULL  |
+
+### Products
+
+| Name  |       Type       | Constraint |
+| :---: | :--------------: | :--------: |
+|  id   |     INTEGER      |     PK     |
+| name  |   VARCHAR(64)    |  NOT NULL  |
+| price | DOUBLE PRECISION |  NOT NULL  |
 
 ### Orders
 

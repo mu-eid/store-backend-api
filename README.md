@@ -59,7 +59,13 @@ DB_TEST=store_test_db
     $ npm run db:setup
 ```
 
--   Start the API server
+-   Run unit tests
+
+```
+    $ npm test
+```
+
+-   Start API server
 
 ```
     $ npm start
@@ -73,8 +79,14 @@ DB_TEST=store_test_db
 
 **NOTES:**
 
--   Please refer to [REQUIRMENTS.md](REQUIREMENTS.md) to check the available **API routes** and **database schema**.
--   Although you can use _db-migrate_ command to do database migrations manually, I chose to make it be done **programmatically** using the _db-migrate javascript API_, that way it is more convenient for the application user to start and test the API.
+-   Please refer to [REQUIRMENTS.md](REQUIREMENTS.md) to check the implemented **API routes** and **database schema**.
+-   Although you can use _db-migrate_ command to do database migrations manually, I chose to make it happen **programmatically** using the _db-migrate javascript API_, therefore every time you run:
+
+    -   npm test
+    -   npm start
+    -   npm run serve
+
+    this will _automatically_ pick and apply database migrations.
 
 ## How to use the API?
 
@@ -99,7 +111,11 @@ DB_TEST=store_test_db
 
 -   Now we can use the token to be authorized for using certain routes of the API.
 
--   Creating another user
+## API Examples
+
+### User Endpoints
+
+-   Creating a new user
 
 ```
     $ curl -X POST \
@@ -129,7 +145,6 @@ response should be:
 
 ```
     $ curl -X GET \
-        -H "Content-Type: application/json" \
         -H "Accept: application/json" \
         -H "Authorization: Bearer [TOKEN HERE]"   \
       http://127.0.0.1:7001/users/2
@@ -151,7 +166,6 @@ response should be:
 
 ```
     $ curl -X DELETE \
-        -H "Content-Type: application/json" \
         -H "Accept: application/json" \
         -H "Authorization: Bearer [TOKEN HERE]"   \
       http://127.0.0.1:7001/users/2
@@ -170,3 +184,37 @@ response should be:
       }
     }
 ```
+
+### Products Endpoints
+
+-   Creating a new product
+
+```
+    $ curl -X POST \
+        -H "Content-Type: application/json" \
+        -H "Accept: application/json" \
+        -H "Authorization: Bearer [TOKEN HERE]" \
+        --data-raw '{"name": "Programming Haskell", "price": 37.89}' \
+      http://127.0.0.1:7001/products
+
+```
+
+-   Showing product by id
+
+```
+    $ curl -X GET \
+        -H "Accept: application/json" \
+      http://127.0.0.1:7001/products/1
+```
+
+response for former and latter requests should be:
+
+```
+    {
+      "id": 1,
+      "name": "Programming Haskell",
+      "price": 37.89
+    }
+```
+
+The rest of the API endpoints can be explored and tested the same way.
