@@ -53,7 +53,7 @@ DB_DEV=store_dev_db
 DB_TEST=store_test_db
 ```
 
--   Apply database migrations (schema setup)
+-   Apply database migrations
 
 ```
     $ npm run db:setup
@@ -90,26 +90,7 @@ DB_TEST=store_test_db
 
 ## How to use the API?
 
--   The database contains the first user as an authorized user example in order to test (token required) routes.
-
--   Using your favorite HTTP client or API testing tool, we can test the next routes:
-
-    -   Obtain the admin user token
-
-    ```
-        $ curl http://127.0.0.1:7001/admin
-    ```
-
-    -   response should be:
-
-    ```
-        {
-          "message": "admin user token",
-          "token": [TOKEN]
-        }
-    ```
-
--   Now we can use the token to be authorized for using certain routes of the API.
+TODO
 
 ## API Examples
 

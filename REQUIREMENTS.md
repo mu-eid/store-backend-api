@@ -8,12 +8,14 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ### Users
 
-| Action  | HTTP   | URI        |  Token   |
-| :------ | :----- | :--------- | :------: |
-| Index   | GET    | /users     | Required |
-| Show    | GET    | /users/:id | Required |
-| Create  | POST   | /users     | Required |
-| Destroy | DELETE | /users/:id | Required |
+| Action  | HTTP   | URI           |  Token   |
+| :------ | :----- | :------------ | :------: |
+| Sign Up | POST   | /users/signup |   None   |
+| Log In  | POST   | /users/login  |   None   |
+| Index   | GET    | /users        | Required |
+| Show    | GET    | /users/:id    | Required |
+| Create  | POST   | /users        | Required |
+| Destroy | DELETE | /users/:id    | Required |
 
 ### Products
 
@@ -50,28 +52,29 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ### Users
 
-|    Name    |    Type     | Constraint |
-| :--------: | :---------: | :--------: |
-|     id     |   INTEGER   |     PK     |
-| first_name | VARCHAR(32) |  NOT NULL  |
-| last_name  | VARCHAR(32) |  NOT NULL  |
-|  password  |  CHAR(60)   |  NOT NULL  |
+| Column     | Type        | Constraint | Nullable |
+| :--------- | :---------- | :--------: | :------: |
+| id         | INTEGER     |     PK     | NOT NULL |
+| username   | VARCHAR(32) |   UNIQUE   | NOT NULL |
+| first_name | VARCHAR(32) |     -      | NOT NULL |
+| last_name  | VARCHAR(32) |     -      | NOT NULL |
+| password   | CHAR(60)    |     -      | NOT NULL |
 
 ### Products
 
-| Name  |       Type       | Constraint |
-| :---: | :--------------: | :--------: |
-|  id   |     INTEGER      |     PK     |
-| name  |   VARCHAR(64)    |  NOT NULL  |
-| price | DOUBLE PRECISION |  NOT NULL  |
+| Column | Type             | Constraint | Nullable |
+| :----- | :--------------- | :--------: | :------: |
+| id     | INTEGER          |     PK     | NOT NULL |
+| name   | VARCHAR(64)      |     -      | NOT NULL |
+| price  | DOUBLE PRECISION |     -      | NOT NULL |
 
 ### Orders
 
-|   Name    |  Type   |  Constraint   |
-| :-------: | :-----: | :-----------: |
-|    id     | INTEGER |      PK       |
-|  user_id  | INTEGER |      FK       |
-| compelete | BOOLEAN | DEFAULT FALSE |
+|  Column   |  Type   |  Constraint   | Nullable |
+| :-------: | :-----: | :-----------: | :------: |
+|    id     | INTEGER |      PK       | NOT NULL |
+|  user_id  | INTEGER |      FK       | NOT NULL |
+| compelete | BOOLEAN | DEFAULT FALSE | NOT NULL |
 
 ### Order_Items
 
