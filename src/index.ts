@@ -10,7 +10,6 @@ import productRoutes from './routes/product.routes';
 import orderRoutes from './routes/order.routes';
 import itemRoutes from './routes/order_item.routes';
 import { logger } from './routes/middleware/logger';
-import { getAdminToken } from './utils/user';
 
 // Start database migrations
 process.nextTick(async () => {
@@ -33,14 +32,6 @@ itemRoutes(app);
 
 app.get('/status', async (req: Request, resp: Response): Promise<void> => {
     resp.json({ api: { status: 'up' } });
-});
-
-app.get('/admin', (req: Request, resp: Response): void => {
-    resp.json({
-        message:
-            'Admin user token, use it to make (token required) API requests.',
-        token: getAdminToken(),
-    });
 });
 
 const { HOST, PORT } = process.env;

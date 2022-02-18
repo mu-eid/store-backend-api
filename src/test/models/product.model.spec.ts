@@ -3,7 +3,7 @@ import { ProductStore } from '../../models/product';
 import { initTestDB } from '../../utils/db_migrator';
 import { productMock } from './mocks';
 
-describe('Product Data Model Actions', () => {
+describe('PRODUCT DATA MODEL:', () => {
     const model = new ProductStore(dbClient);
 
     const expectedResult = {

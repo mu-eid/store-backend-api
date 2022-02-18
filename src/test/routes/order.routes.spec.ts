@@ -1,23 +1,25 @@
 import * as httpTest from 'supertest';
 
 import { app } from '../../index';
-
+import { createUserInDB } from '../../utils/data';
 import { initTestDB } from '../../utils/db_migrator';
-import { getAdminToken } from '../../utils/user';
+import { genUserToken, toUserPayload } from '../../utils/user';
 import { orderMock } from '../models/mocks';
 
 describe('ORDERS API ROUTES:', () => {
     const httpClient = httpTest.default(app);
-
-    const adminToken = getAdminToken();
 
     const expectedResult = {
         id: 1,
         ...orderMock,
     };
 
+    let token: string;
+
     beforeAll(async () => {
         await initTestDB();
+        const user = await createUserInDB();
+        token = genUserToken(toUserPayload(user));
     });
 
     describe('Given a valid admin or user token:', () => {
@@ -26,7 +28,7 @@ describe('ORDERS API ROUTES:', () => {
                 const resp = await httpClient
                     .post('/orders')
                     .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${adminToken}`)
+                    .set('Authorization', `Bearer ${token}`)
                     .send(orderMock);
 
                 expect(resp.statusCode).toBe(201);
@@ -39,7 +41,7 @@ describe('ORDERS API ROUTES:', () => {
             it('should retrive a list of orders found in database.', async () => {
                 const resp = await httpClient
                     .get('/orders')
-                    .set('Authorization', `Bearer ${adminToken}`);
+                    .set('Authorization', `Bearer ${token}`);
 
                 expect(resp.statusCode).toBe(200);
                 expect(resp.get('Content-Type')).toMatch(/json/);
@@ -52,7 +54,7 @@ describe('ORDERS API ROUTES:', () => {
                 const resp = await httpClient
                     .get('/orders/1')
                     .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${adminToken}`);
+                    .set('Authorization', `Bearer ${token}`);
 
                 expect(resp.statusCode).toBe(200);
                 expect(resp.get('Content-Type')).toMatch(/json/);
@@ -65,7 +67,7 @@ describe('ORDERS API ROUTES:', () => {
                 const resp = await httpClient
                     .get('/orders/users/1')
                     .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${adminToken}`);
+                    .set('Authorization', `Bearer ${token}`);
 
                 expect(resp.statusCode).toBe(200);
                 expect(resp.get('Content-Type')).toMatch(/json/);
@@ -78,7 +80,7 @@ describe('ORDERS API ROUTES:', () => {
                 const resp = await httpClient
                     .delete('/orders/1')
                     .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${adminToken}`);
+                    .set('Authorization', `Bearer ${token}`);
 
                 expect(resp.statusCode).toBe(200);
                 expect(resp.get('Content-Type')).toMatch(/json/);
@@ -90,7 +92,7 @@ describe('ORDERS API ROUTES:', () => {
             it('should retrive an empty list, when orders table is empty.', async () => {
                 const resp = await httpClient
                     .get('/orders')
-                    .set('Authorization', `Bearer ${adminToken}`);
+                    .set('Authorization', `Bearer ${token}`);
 
                 expect(resp.statusCode).toBe(200);
                 expect(resp.get('Content-Type')).toMatch(/json/);

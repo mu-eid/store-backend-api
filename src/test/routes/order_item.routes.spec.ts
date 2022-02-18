@@ -1,23 +1,27 @@
 import * as httpTest from 'supertest';
 
-import dbClient from '../../database';
 import { initTestDB } from '../../utils/db_migrator';
 import { app } from '../../index';
-import { ProductStore } from '../../models/product';
-import { OrderStore } from '../../models/order';
 
-import { orderMock, productMock, itemMock } from '../models/mocks';
-import { getAdminToken } from '../../utils/user';
+import { itemMock } from '../models/mocks';
+import { genUserToken, toUserPayload } from '../../utils/user';
+import {
+    createOrderInDB,
+    createProductInDB,
+    createUserInDB,
+} from '../../utils/data';
 
 describe('items API Endpoints', () => {
     const httpClient = httpTest.default(app);
 
-    const adminToken = getAdminToken();
+    let token: string;
 
     beforeAll(async () => {
         await initTestDB();
-        await new ProductStore(dbClient).create(productMock); // obtaining product_id
-        await new OrderStore(dbClient).create(orderMock); // obtaining order_id
+        const user = await createUserInDB();
+        await createProductInDB();
+        await createOrderInDB();
+        token = genUserToken(toUserPayload(user));
     });
 
     describe('POST /items', () => {
@@ -25,7 +29,7 @@ describe('items API Endpoints', () => {
             const resp = await httpClient
                 .post('/items')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${adminToken}`)
+                .set('Authorization', `Bearer ${token}`)
                 .send(itemMock);
 
             expect(resp.statusCode).toBe(201);
@@ -38,7 +42,7 @@ describe('items API Endpoints', () => {
         it('should retrive a list of items found in table.', async () => {
             const resp = await httpClient
                 .get('/items')
-                .set('Authorization', `Bearer ${adminToken}`);
+                .set('Authorization', `Bearer ${token}`);
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
@@ -51,7 +55,7 @@ describe('items API Endpoints', () => {
             const resp = await httpClient
                 .get('/items/order/1')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${adminToken}`);
+                .set('Authorization', `Bearer ${token}`);
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
@@ -64,7 +68,7 @@ describe('items API Endpoints', () => {
             const resp = await httpClient
                 .get('/items/product/1')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${adminToken}`);
+                .set('Authorization', `Bearer ${token}`);
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
@@ -77,7 +81,7 @@ describe('items API Endpoints', () => {
             const resp = await httpClient
                 .delete('/items/order/1')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${adminToken}`);
+                .set('Authorization', `Bearer ${token}`);
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
@@ -89,7 +93,7 @@ describe('items API Endpoints', () => {
         it('should retrive an empty list, when items table is empty.', async () => {
             const resp = await httpClient
                 .get('/items')
-                .set('Authorization', `Bearer ${adminToken}`);
+                .set('Authorization', `Bearer ${token}`);
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);

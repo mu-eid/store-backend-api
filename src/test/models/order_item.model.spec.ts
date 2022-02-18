@@ -1,25 +1,21 @@
 import dbClient from '../../database';
 import { initTestDB } from '../../utils/db_migrator';
 import { ItemStore } from '../../models/order_item';
-import { orderMock, productMock, userMock, itemMock } from './mocks';
-import { UserStore } from '../../models/user';
-import { ProductStore } from '../../models/product';
-import { OrderStore } from '../../models/order';
+import { itemMock } from './mocks';
+import {
+    createOrderInDB,
+    createProductInDB,
+    createUserInDB,
+} from '../../utils/data';
 
-describe('Order Items Actions', () => {
-    // DB Tables
-    const usersTable = new UserStore(dbClient);
-    const productsTable = new ProductStore(dbClient);
-    const ordersTable = new OrderStore(dbClient);
-
-    // Test subject
+describe('ORDER ITEMS DATA MODEL:', () => {
     const model = new ItemStore(dbClient);
 
     beforeAll(async () => {
         await initTestDB();
-        await usersTable.create(userMock);
-        await productsTable.create(productMock);
-        await ordersTable.create(orderMock);
+        await createUserInDB();
+        await createProductInDB();
+        await createOrderInDB();
     });
 
     describe('Creating new order items', () => {

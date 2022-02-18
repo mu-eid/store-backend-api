@@ -1,9 +1,10 @@
 import * as httpTest from 'supertest';
 
 import { app } from '../../index';
+import { createUserInDB } from '../../utils/data';
 import { initTestDB } from '../../utils/db_migrator';
+import { genUserToken, toUserPayload } from '../../utils/user';
 import { productMock } from '../models/mocks';
-import { getAdminToken } from '../../utils/user';
 
 describe('PRODUCTS API ROUTES', () => {
     const httpClient = httpTest.default(app);
@@ -13,11 +14,12 @@ describe('PRODUCTS API ROUTES', () => {
         ...productMock,
     };
 
-    const adminToken = getAdminToken();
+    let token: string;
 
     beforeAll(async () => {
-        // Set up test database
         await initTestDB();
+        const user = await createUserInDB();
+        token = genUserToken(toUserPayload(user));
     });
 
     describe('Given a valid admin or user token', () => {
@@ -26,7 +28,7 @@ describe('PRODUCTS API ROUTES', () => {
                 const resp = await httpClient
                     .post('/products')
                     .set('Accept', 'application/json')
-                    .set('Authorization', `Beare ${adminToken}`)
+                    .set('Authorization', `Beare ${token}`)
                     .send(productMock);
 
                 expect(resp.statusCode).toBe(201);
@@ -63,7 +65,7 @@ describe('PRODUCTS API ROUTES', () => {
                 const resp = await httpClient
                     .delete('/products/1')
                     .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${adminToken}`);
+                    .set('Authorization', `Bearer ${token}`);
 
                 expect(resp.statusCode).toBe(200);
                 expect(resp.get('Content-Type')).toMatch(/json/);
