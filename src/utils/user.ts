@@ -3,27 +3,14 @@ import * as bcrypt from 'bcrypt';
 
 import { User } from '../models/user';
 
-/**
- * Admin user is already created in database
- * as a placeholder for the purpose of testing
- * and using routes that require user token authorization.
- *
- * API tester can obtain the admin token by visiting /admin path.
- */
-const adminUser: User = {
-    id: 1,
-    first_name: 'Admin',
-    last_name: 'User',
-    password: 'password',
-};
-
-type UserPayload = Omit<User, 'id' | 'password'> & { sub: number };
+type UserPayload = { sub: number } & Pick<User, 'username'>;
 
 type UserCredentials = Omit<User, 'password'>;
 
-function stripUserPassword(user: User): UserCredentials {
+function stripPassword(user: User): UserCredentials {
     return {
         id: user.id as number,
+        username: user.username,
         first_name: user.first_name,
         last_name: user.last_name,
     };
@@ -32,21 +19,17 @@ function stripUserPassword(user: User): UserCredentials {
 function toUserPayload(user: User): UserPayload {
     return {
         sub: user.id as number,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        username: user.username,
     };
 }
 
-const generateUserToken = (payload: UserPayload): string => {
+const genUserToken = (payload: UserPayload): string => {
     return jwt.sign(payload, process.env.SIGN_HASH as string);
 };
 
 const encryptPassword = async (password: string): Promise<string> => {
-    const digest = await bcrypt.hash(password, process.env.SALT_HASH as string);
-    return digest;
+    return await bcrypt.hash(password, process.env.SALT_HASH as string);
 };
-
-const getAdminToken = () => generateUserToken(toUserPayload(adminUser));
 
 export {
     /**
@@ -58,9 +41,7 @@ export {
      * Utility functions
      */
     encryptPassword,
-    stripUserPassword,
+    stripPassword,
     toUserPayload,
-    adminUser,
-    generateUserToken,
-    getAdminToken,
+    genUserToken,
 };

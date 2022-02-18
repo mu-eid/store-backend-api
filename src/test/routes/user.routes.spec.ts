@@ -1,68 +1,59 @@
 import * as httpTest from 'supertest';
 
 import { app } from '../../index';
-import { userMock } from '../models/mocks';
+import { secondUserMock } from '../models/mocks';
 import { initTestDB } from '../../utils/db_migrator';
-import {
-    getAdminToken,
-    stripUserPassword,
-    UserCredentials,
-} from '../../utils/user';
+import { genUserToken, stripPassword, toUserPayload } from '../../utils/user';
+import { createUserInDB } from '../../utils/data';
 
-describe('USERS API ROUTES', () => {
+describe('USERS ROUTES:', () => {
     const httpClient = httpTest.default(app);
 
-    const expectedPayload = {
-        ...stripUserPassword(userMock),
-        id: 2,
+    const userID = 2;
+
+    const payloadMock = {
+        ...stripPassword(secondUserMock),
+        id: userID,
     };
 
-    // Expected response sturcture
-    const expectedEntityResp = {
-        user: expectedPayload,
+    const responseShape = {
+        user: payloadMock,
     };
 
-    const adminToken = getAdminToken();
+    let authorizedUserToken: string;
 
     beforeAll(async () => {
         await initTestDB();
+        const firstUser = await createUserInDB();
+        authorizedUserToken = genUserToken(toUserPayload(firstUser));
     });
 
-    describe('Given a valid admin or user token:', () => {
-        describe('POST /users -- [Token Required]', () => {
-            it('should create a new user entity in database, given a well-formed user entity.', async () => {
-                const resp = await httpClient
-                    .post('/users')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${adminToken}`)
-                    .send(userMock);
+    describe('POST /users', () => {
+        it('should create a new user in database, given a well-formed user entity.', async () => {
+            const resp = await httpClient
+                .post('/users')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${authorizedUserToken}`)
+                .send(secondUserMock);
 
-                const { created, token } = resp.body as {
-                    created: UserCredentials;
-                    token: string;
-                };
+            const { created, token } = resp.body;
 
-                const expectedEntityResp = {
-                    created: expectedPayload,
-                };
-
-                expect(resp.statusCode).toBe(201);
-                expect(resp.get('Content-Type')).toMatch(/json/);
-                expect(token).toBeDefined();
-                expect(created).toEqual(expectedEntityResp.created);
-            });
+            expect(resp.statusCode).toBe(201);
+            expect(resp.get('Content-Type')).toMatch(/json/);
+            expect(token).toBeDefined();
+            expect(created.user).toEqual(responseShape.user);
         });
+    });
 
-        describe('GET /users/:id -- [Token Required]', () => {
-            it('should return a user entity, given a user id that exists in database.', async () => {
-                const resp = await httpClient
-                    .get('/users/2')
-                    .set('Authorization', `Bearer ${adminToken}`);
+    describe('GET /users/:id -- [Token Required]', () => {
+        it('should return a user entity, given a user id that exists in database.', async () => {
+            const resp = await httpClient
+                .get(`/users/${userID}`)
+                .set('Authorization', `Bearer ${authorizedUserToken}`);
 
-                expect(resp.statusCode).toBe(200);
-                expect(resp.get('Content-Type')).toMatch(/json/);
-                expect(resp.body).toEqual(expectedEntityResp);
-            });
+            expect(resp.statusCode).toBe(200);
+            expect(resp.get('Content-Type')).toMatch(/json/);
+            expect(resp.body).toEqual(responseShape);
         });
     });
 
@@ -70,7 +61,7 @@ describe('USERS API ROUTES', () => {
         it('should return non-empty list, when table is non-empty.', async () => {
             const resp = await httpClient
                 .get('/users')
-                .set('Authorization', `Bearer ${adminToken}`);
+                .set('Authorization', `Bearer ${authorizedUserToken}`);
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
@@ -80,7 +71,7 @@ describe('USERS API ROUTES', () => {
             // there are 2 users in users table one mock admin
             // and another newly created user.
             expect(resp.body.length).toBe(2);
-            expect(resp.body[1]).toEqual(expectedEntityResp);
+            expect(resp.body[1]).toEqual(responseShape);
         });
     });
 
@@ -89,16 +80,16 @@ describe('USERS API ROUTES', () => {
             const resp = await httpClient
                 .delete('/users/2')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${adminToken}`);
+                .set('Authorization', `Bearer ${authorizedUserToken}`);
 
             // Expected response sturcture
-            const expectedDeleteResp = {
-                deleted: expectedEntityResp,
+            const deleteResponseShape = {
+                deleted: responseShape,
             };
 
             expect(resp.statusCode).toBe(200);
             expect(resp.get('Content-Type')).toMatch(/json/);
-            expect(resp.body).toEqual(expectedDeleteResp);
+            expect(resp.body).toEqual(deleteResponseShape);
         });
     });
 });

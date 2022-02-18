@@ -3,7 +3,15 @@ import { Product } from '../../models/product';
 import { Order } from '../../models/order';
 import { Item } from '../../models/order_item';
 
-const userMock: User = {
+const firstUserMock: User = {
+    username: 'denosaurus81',
+    first_name: 'Ryan',
+    last_name: 'Dahl',
+    password: 'Node<Deno;)',
+};
+
+const secondUserMock: User = {
+    username: 'scala_dady',
     first_name: 'Martin',
     last_name: 'Odersky',
     password: '$calaR0ck$',
@@ -25,4 +33,4 @@ const itemMock: Item = {
     quantity: 1,
 };
 
-export { userMock, productMock, orderMock, itemMock };
+export { firstUserMock, secondUserMock, productMock, orderMock, itemMock };

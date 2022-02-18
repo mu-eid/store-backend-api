@@ -6,10 +6,13 @@ import { encryptPassword } from '../utils/user';
 
 type User = {
     id?: number;
+    username: string;
     first_name: string;
     last_name: string;
     password: string;
 };
+
+class UserNotFoundError extends Error {}
 
 class UserStore extends DataModel<User> {
     constructor(db: pg.Pool) {
@@ -21,14 +24,19 @@ class UserStore extends DataModel<User> {
             const pass_digest = await encryptPassword(user.password);
 
             const result = await this.executeQuery(
-                `INSERT INTO ${Table.USERS} (first_name, last_name, password) 
-                 VALUES ('${user.first_name}', '${user.last_name}', '${pass_digest}')
+                `INSERT INTO ${Table.USERS} (username, first_name, last_name, password) 
+                 VALUES (
+                     '${user.username}',
+                     '${user.first_name}', 
+                     '${user.last_name}', 
+                     '${pass_digest}'
+                    )
                  RETURNING *`
             );
             return result.rows[0];
         } catch (err) {
             const error = err as Error;
-            throw new Error(`Creating New User -- ${error.message}`);
+            throw new Error(`Creating new user -- ${error.message}`);
         }
     }
 
@@ -43,7 +51,7 @@ class UserStore extends DataModel<User> {
             return result.rows[0];
         } catch (err) {
             const error = err as Error;
-            throw new Error(`Updating user first name -- ${error.message}`);
+            throw new Error(`Updating user's first name -- ${error.message}`);
         }
     }
 
@@ -58,7 +66,7 @@ class UserStore extends DataModel<User> {
             return result.rows[0];
         } catch (err) {
             const error = err as Error;
-            throw new Error(`Updating user last name -- ${error.message}`);
+            throw new Error(`Updating user's last name -- ${error.message}`);
         }
     }
 
@@ -75,9 +83,28 @@ class UserStore extends DataModel<User> {
             return result.rows[0];
         } catch (err) {
             const error = err as Error;
-            throw new Error(`Updating user first name -- ${error.message}`);
+            throw new Error(`Updating user's password -- ${error.message}`);
+        }
+    }
+
+    async fetchByUserName(username: string): Promise<User> {
+        try {
+            const result = await this.executeQuery(
+                `SELECT * FROM ${Table.USERS} WHERE username = '${username}';`
+            );
+
+            if (result.rowCount === 0)
+                throw new UserNotFoundError(
+                    `No such user with username ${username} found in database.`
+                );
+
+            return result.rows[0];
+        } catch (err) {
+            const error = err as Error;
+            if (error instanceof UserNotFoundError) throw error;
+            throw new Error(`Fetching user by username -- ${error.message}`);
         }
     }
 }
 
-export { User, UserStore };
+export { User, UserStore, UserNotFoundError };

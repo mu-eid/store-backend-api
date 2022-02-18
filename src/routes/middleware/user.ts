@@ -1,35 +1,37 @@
 import { Request, Response, NextFunction } from 'express';
+import { User } from '../../models/user';
 
 const checkUserPayload = (
     req: Request,
     resp: Response,
     next: NextFunction
 ): void => {
-    const { first_name, last_name, password } = req.body;
+    const { username, first_name, last_name, password } = req.body as User;
 
-    let reason: string = '';
+    let reasons: string[] = [];
 
-    if (!first_name) {
-        reason = 'First name was not provided.';
+    if (!username) {
+        reasons.push('Username');
     }
-
-    if (!last_name) {
-        reason = 'Last name was not provided.';
-    }
-
     if (!password) {
-        reason = 'Password was not provided.';
+        reasons.push('Password');
     }
 
-    if (reason) {
+    if (req.path === 'users/signup') {
+        if (!first_name) {
+            reasons.push('First name');
+        }
+        if (!last_name) {
+            reasons.push('Last name');
+        }
+    }
+
+    if (reasons.length > 0) {
         resp.status(422).json({
             error: {
-                reason: reason,
-                recieved: {
-                    first_name: first_name,
-                    last_name: last_name,
-                    password: password,
-                },
+                message: 'Invalid user entity',
+                reasons: reasons.map((reason) => reason + ' is missing.'),
+                recieved: req.body,
             },
         });
         return;

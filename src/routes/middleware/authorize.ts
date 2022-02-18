@@ -62,20 +62,14 @@ const authorize = async (
          *  Expected payload structure
          *  {
          *    sub: number,
-         *    first_name: string,
-         *    last_name: string
+         *    username: string,
          *  }
          */
-        const { sub, first_name, last_name } =
-            payload as unknown as UserPayload;
+        const { sub, username } = payload as unknown as UserPayload;
 
         const result = await new UserStore(dbClient).show(sub);
 
-        if (
-            !result ||
-            result.first_name !== first_name ||
-            result.last_name !== last_name
-        ) {
+        if (!result || result.username !== username) {
             // Code 401 -- We don't know such user
             reportTokenError({ tokenErrorType: 'no-access' }, resp);
             return;
@@ -84,7 +78,7 @@ const authorize = async (
         const error = err as Error;
 
         if (error instanceof jwt.TokenExpiredError) {
-            // Code 403 -- We know the user but can not authorize them.
+            // Code 403 -- We know the user but cannot authorize them.
             reportTokenError({ tokenErrorType: 'expired', body: error }, resp);
             return;
         }

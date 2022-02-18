@@ -1,11 +1,12 @@
 import { Application, Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 
 import dbClient from '../database';
-import { User, UserStore } from '../models/user';
-import { stripUserPassword, toUserPayload } from '../utils/user';
+import { User, UserNotFoundError, UserStore } from '../models/user';
+import { httpError } from '../utils/http';
+import { genUserToken, stripPassword, toUserPayload } from '../utils/user';
 import authorize from './middleware/authorize';
-import { checkID, exceptAdmin } from './middleware/id-checker';
+import { checkID } from './middleware/id-checker';
 import { checkUserPayload } from './middleware/user';
 
 const model = new UserStore(dbClient);
@@ -16,16 +17,11 @@ const index = async (req: Request, resp: Response): Promise<void> => {
         const result = await model.index();
         resp.json(
             result.map((u) => {
-                return { user: stripUserPassword(u) };
+                return { user: stripPassword(u) };
             })
         );
     } catch (err) {
-        resp.status(500).json({
-            error: {
-                When: 'While requesting GET /users',
-                Reason: (err as Error).message,
-            },
-        });
+        resp.status(500).json(httpError('GET /users', err as Error));
     }
 };
 
@@ -38,48 +34,40 @@ const show = async (req: Request, resp: Response): Promise<void> => {
 
         result
             ? resp.json({
-                  user: stripUserPassword(result),
+                  user: stripPassword(result),
               })
             : resp.status(404).json({
                   message: `No such user with id: ${id} in database`,
               });
     } catch (err) {
-        resp.status(500).json({
-            error: {
-                When: `While requesting GET /users/:id`,
-                Reason: (err as Error).message,
-            },
-        });
+        resp.status(500).json(httpError('GET /users/:id', err as Error));
     }
 };
 
 // POST /users
 const create = async (req: Request, resp: Response): Promise<void> => {
-    const { first_name, last_name, password } = req.body as User;
+    const { username, first_name, last_name, password } = req.body as User;
 
     try {
         // Insert user credentials into database
         const entity = await model.create({
+            username: username,
             first_name: first_name,
             last_name: last_name,
             password: password,
         });
 
         // Create authorization token
-        const payload = toUserPayload(entity);
-        const token = jwt.sign(payload, process.env.SIGN_HASH as string);
+        const token = genUserToken(toUserPayload(entity));
 
         resp.status(201).json({
-            created: stripUserPassword(entity),
+            created: {
+                user: stripPassword(entity),
+            },
             token: token,
         });
     } catch (err) {
-        resp.status(500).json({
-            error: {
-                When: `While requesting POST /users`,
-                Reason: (err as Error).message,
-            },
-        });
+        resp.status(500).json(httpError('POST /users', err as Error));
     }
 };
 
@@ -91,23 +79,48 @@ const destroy = async (req: Request, resp: Response): Promise<void> => {
         const result = await model.delete(id);
 
         result
-            ? resp.json({ deleted: { user: stripUserPassword(result) } })
+            ? resp.json({ deleted: { user: stripPassword(result) } })
             : resp.status(404).json({ message: 'No such user in database' });
     } catch (err) {
-        resp.status(500).json({
-            error: {
-                When: `While requesting DELETE /users/:id`,
-                Reason: (err as Error).message,
-            },
-        });
+        const error = err as Error;
+        resp.status(500).json(httpError('DELETE /users/:id', error));
+    }
+};
+
+const login = async (req: Request, resp: Response): Promise<void> => {
+    const { username, password } = req.body as Partial<User>;
+
+    try {
+        const result = await model.fetchByUserName(username as string);
+        const match = await bcrypt.compare(password as string, result.password);
+
+        match
+            ? resp.status(200).json({
+                  logged_in: result.username,
+                  token: genUserToken(toUserPayload(result)),
+              })
+            : resp
+                  .status(403)
+                  .json(
+                      httpError(
+                          'POST /users/login',
+                          new Error('Wrong password')
+                      )
+                  );
+    } catch (err) {
+        const error = err as Error;
+        const code = error instanceof UserNotFoundError ? 404 : 500;
+        resp.status(code).json(httpError('POST /users/login', error));
     }
 };
 
 function userRoutes(app: Application): void {
+    app.post('/users/signup', checkUserPayload, create);
+    app.post('/users/login', checkUserPayload, login);
+    app.post('/users', authorize, checkUserPayload, create);
     app.get('/users', authorize, index);
     app.get('/users/:id', authorize, checkID, show);
-    app.post('/users', authorize, checkUserPayload, create);
-    app.delete('/users/:id', authorize, checkID, exceptAdmin, destroy);
+    app.delete('/users/:id', authorize, checkID, destroy);
 }
 
 export default userRoutes;
