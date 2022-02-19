@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-const ENV_PATH = path.resolve(__dirname, '..', '..', 'config', '.env');
+const ENV_PATH = path.resolve(__dirname, '..', '..','.env');
 
 const DB_MIGRATE_CONFIG_PATH = path.resolve(
     __dirname,

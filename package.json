@@ -8,8 +8,8 @@
         "start": "npm run build && cross-env NODE_ENV=dev node dist/index.js",
         "serve": "cross-env NODE_ENV=dev npx nodemon src/index.ts",
         "test": "npm run build && cross-env NODE_ENV=test npx jasmine",
-        "db:build": "psql -f config/init.sql",
-        "db:setup": "npx db-migrate up --config config/database.json",
+        "db:setup": "psql -q -f config/init.sql",
+        "db:migrate": "npx db-migrate up --config config/database.json",
         "db:reset": "npx db-migrate reset --config config/database.json",
         "fmt": "npx prettier --write .",
         "clear": "npx rimraf dist/"

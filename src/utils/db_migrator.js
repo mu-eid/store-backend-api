@@ -1,15 +1,8 @@
 'use strict';
 
 import * as path from 'path';
+import { DB_MIGRATE_CONFIG_PATH as configPath } from './config-path';
 import * as db_migrate from 'db-migrate';
-
-const configPath = path.resolve(
-    __dirname,
-    '..',
-    '..',
-    'config',
-    'database.json'
-);
 
 const dev_migrator = db_migrate.getInstance(true, {
     config: configPath,
@@ -21,37 +14,42 @@ const test_migrator = db_migrate.getInstance(true, {
     env: 'test',
 });
 
-// Disable logs of applied migrations
-// to reduce info noise while developing or testing
+// Disable logs, less info noise
 dev_migrator.silence(true);
 test_migrator.silence(true);
 
 function initDevDB() {
     console.info(
-        '[INFO]: ----------------- Setting up Development Database ------------------'
+        '[INFO]: ====================== DEV DATABASE SET UP ======================'
     );
-    return dev_migrator.reset().then(() => dev_migrator.up());
+    return dev_migrator
+        .reset()
+        .then(() => dev_migrator.up())
+        .catch(console.error);
 }
 
 function resetDevDB() {
     console.info(
-        '[INFO]: ----------------- Resetting Development Database -------------------'
+        '[INFO]: ====================== DEV DATABASE RESET ======================='
     );
-    return dev_migrator.reset();
+    return dev_migrator.reset().catch(console.error);
 }
 
 function initTestDB() {
     console.info(
-        '[INFO]: ----------------- Setting up Testing Database ----------------------'
+        '[INFO]: ====================== TEST DATABASE SET UP ======================'
     );
-    return test_migrator.reset().then(() => test_migrator.up());
+    return test_migrator
+        .reset()
+        .then(() => test_migrator.up())
+        .catch(console.error);
 }
 
 function resetTestDB() {
     console.info(
-        '[INFO]: ----------------- Resetting Testing Database -----------------------'
+        '[INFO]: ====================== TEST DATABASE RESET ======================='
     );
-    return test_migrator.reset();
+    return test_migrator.reset().catch(console.error);
 }
 
 export { initDevDB, initTestDB };

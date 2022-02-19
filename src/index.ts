@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { ENV_PATH } from './utils/path';
+import { ENV_PATH } from './utils/config-path';
 dotenv.config({ path: ENV_PATH });
 
 import express, { Request, Response } from 'express';
