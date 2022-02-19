@@ -52,20 +52,20 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ### Users
 
-| Column     | Type        | Constraint | Nullable |
-| :--------- | :---------- | :--------: | :------: |
-| id         | INTEGER     |     PK     | NOT NULL |
-| username   | VARCHAR(32) |   UNIQUE   | NOT NULL |
+|   Column   |    Type     | Constraint | Nullable |
+| :--------: | :---------: | :--------: | :------: |
+|     id     |   INTEGER   |     PK     | NOT NULL |
+|  username  | VARCHAR(32) |   UNIQUE   | NOT NULL |
 | first_name | VARCHAR(32) |     -      | NOT NULL |
 | last_name  | VARCHAR(32) |     -      | NOT NULL |
-| password   | CHAR(60)    |     -      | NOT NULL |
+|  password  |  CHAR(60)   |     -      | NOT NULL |
 
 ### Products
 
-| Column | Type             | Constraint | Nullable |
-| :----- | :--------------- | :--------: | :------: |
-| id     | INTEGER          |     PK     | NOT NULL |
-| name   | VARCHAR(64)      |     -      | NOT NULL |
+| Column |       Type       | Constraint | Nullable |
+| :----: | :--------------: | :--------: | :------: |
+|   id   |     INTEGER      |     PK     | NOT NULL |
+|  name  |   VARCHAR(64)    |     -      | NOT NULL |
 | price  | DOUBLE PRECISION |     -      | NOT NULL |
 
 ### Orders
